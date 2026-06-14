@@ -65,10 +65,11 @@ all the same friends are hanging out for some outdoor games:
 - 🚦 **Red Light, Green Light** — Keroppi points you to Badtz-Maru's game
 - 🦋 **Butterfly Catch** with My Melody — run around with your net
 
-Every friend hosts an outdoor game now! Walk up to a friend to play. Tap **🏠
-Inside** at the top to go back into the mansion, or **🏊 Pool** at the bottom to
-head to the pool. Earn coins in every game — your coins and best scores are saved
-automatically in your browser.
+Every friend hosts an outdoor game now! Walk up to a friend to play. From the
+backyard you can also tap **🏠 Inside** (top) for the mansion, **🏊 Pool**
+(bottom) for the pool, or **🛝 Playground** (bottom-right) for the playground.
+Earn coins in every game — your coins and best scores are saved automatically in
+your browser.
 
 ## The Pool 🏊
 
@@ -82,8 +83,37 @@ splashy water games — all the same friends are here too:
 - 🦆 **Duck Round-Up** with My Melody — tap the rubber duckies before they drift off
 - 🔫 **Squirt Splash** with Kuromi — squirt the targets that pop up (whack-a-mole!)
 
-Tap **🌳 Backyard** at the top of the pool to head back. (Mansion → Backyard →
-Pool — wander between all three areas freely.)
+Tap **🌳 Backyard** at the top of the pool to head back.
+
+## The Playground 🛝
+
+Through the playground gate at the bottom-right of the backyard is the
+playground, with six more games — the same friends are here too:
+
+- 🥏 **Swing Jump** with My Melody — pump the swing, then jump off and fly far
+- 🏃 **Tag, You're It!** with Pochacco — chase and tag all your friends
+- 🐒 **Monkey Bars** with Badtz-Maru — time your taps to swing across
+- 🏰 **Sand Castle** with Hello Kitty — stack the blocks to build it tall
+- 🪁 **Kite Flying** with Cinnamoroll — steer the kite through rings and gusts
+- ⚖️ **Seesaw Pop** with Pompompurin — bounce Keroppi up to pop the balloons
+
+Tap **🌳 Backyard** at the top to head back.
+
+## The School 🏫
+
+Through the school gate at the bottom-left of the backyard is the schoolyard,
+with a ride there plus learning games for a kindergartener heading into 1st
+grade — the same friends are the teachers:
+
+- 🏍️ **Ride to School** with Badtz-Maru — jump your motorbike over obstacles
+- 🔢 **Counting Fun** with My Melody — count the objects, tap the number
+- ➕ **Add It Up** with Pompompurin — simple adding (sums to ~10)
+- 🔤 **ABC Match** with Hello Kitty — letters and beginning sounds
+- ✏️ **Spell It Out** with Cinnamoroll — finish the little (CVC) word
+- 🔷 **Shapes & Patterns** with Keroppi — what shape comes next?
+
+The five areas connect as **Mansion → Backyard → { School, Pool, Playground }** —
+wander between them all freely.
 
 ## Pets & customizing them 🐾
 

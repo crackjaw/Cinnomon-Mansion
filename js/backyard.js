@@ -14,6 +14,10 @@
   const INSIDE = { door: { x: 430, y: 8, w: 100, h: 62 }, frontX: 480, frontY: 112 };
   // gate down to the pool (bottom-centre)
   const POOLGATE = { cx: 480, y: 516, w: 96, h: 48, frontX: 480, frontY: 500 };
+  // gate over to the playground (bottom-right corner)
+  const PLAYGATE = { cx: 876, y: 522, w: 92, h: 44, frontX: 876, frontY: 506 };
+  // gate off to school (bottom-left corner)
+  const SCHOOLGATE = { cx: 86, y: 522, w: 92, h: 44, frontX: 86, frontY: 506 };
 
   // game stations (2 rows of 4): walk up to the friend and they invite you to play
   const STATIONS = [
@@ -181,7 +185,11 @@
       const id = CM.dist(this.p.x, this.p.y, INSIDE.frontX, INSIDE.frontY);
       if (id < 72 && id < bestDist) { bestDist = id; best = { type: 'inside' }; }
       const pd = CM.dist(this.p.x, this.p.y, POOLGATE.frontX, POOLGATE.frontY);
-      if (pd < 72 && pd < bestDist) best = { type: 'pool' };
+      if (pd < 72 && pd < bestDist) { bestDist = pd; best = { type: 'pool' }; }
+      const gd = CM.dist(this.p.x, this.p.y, PLAYGATE.frontX, PLAYGATE.frontY);
+      if (gd < 70 && gd < bestDist) { bestDist = gd; best = { type: 'play' }; }
+      const cd = CM.dist(this.p.x, this.p.y, SCHOOLGATE.frontX, SCHOOLGATE.frontY);
+      if (cd < 70 && cd < bestDist) best = { type: 'school' };
       return best;
     },
 
@@ -195,12 +203,20 @@
       if (Math.abs(mx - POOLGATE.cx) < POOLGATE.w / 2 + 16 && my > POOLGATE.y - 30) {
         return { type: 'pool' };
       }
+      if (Math.abs(mx - PLAYGATE.cx) < PLAYGATE.w / 2 + 16 && my > PLAYGATE.y - 30) {
+        return { type: 'play' };
+      }
+      if (Math.abs(mx - SCHOOLGATE.cx) < SCHOOLGATE.w / 2 + 16 && my > SCHOOLGATE.y - 30) {
+        return { type: 'school' };
+      }
       return null;
     },
 
     interactAnchor(it) {
       if (it.type === 'inside') return { x: INSIDE.frontX, y: INSIDE.frontY, reach: 72 };
       if (it.type === 'pool') return { x: POOLGATE.frontX, y: POOLGATE.frontY, reach: 72 };
+      if (it.type === 'play') return { x: PLAYGATE.frontX, y: PLAYGATE.frontY, reach: 72 };
+      if (it.type === 'school') return { x: SCHOOLGATE.frontX, y: SCHOOLGATE.frontY, reach: 72 };
       return { x: it.station.x, y: it.station.y + 22, reach: 76 };
     },
 
@@ -208,6 +224,8 @@
       const P = CM.palette;
       if (it.type === 'inside') { CM.audio.play('pop'); CM.switchScene('mansion'); return; }
       if (it.type === 'pool') { CM.audio.play('pop'); CM.switchScene('pool'); return; }
+      if (it.type === 'play') { CM.audio.play('pop'); CM.switchScene('playground'); return; }
+      if (it.type === 'school') { CM.audio.play('pop'); CM.switchScene('school'); return; }
       CM.audio.play('pop');
       const st = it.station;
       const name = (CM.save.character || {}).name || 'friend';
@@ -296,8 +314,30 @@
       const sprites = [];
       sprites.push({ y: 176, fn: () => tree(g, 70, 176, 1) });
       sprites.push({ y: 176, fn: () => tree(g, 892, 176, 1) });
-      sprites.push({ y: 556, fn: () => bush(g, 70, 556, 1) });
-      sprites.push({ y: 560, fn: () => bush(g, 890, 560, 1) });
+      // gate off to school (bottom-left) — a little schoolhouse archway
+      sprites.push({ y: SCHOOLGATE.y + SCHOOLGATE.h, fn: () => {
+        const x0 = SCHOOLGATE.cx - SCHOOLGATE.w / 2;
+        D.rr(g, SCHOOLGATE.cx - 52, SCHOOLGATE.y - 30, 104, 26, 9, '#fff', '#f0b9d2', 2.5);
+        D.text(g, '🏫 School', SCHOOLGATE.cx, SCHOOLGATE.y - 17, { size: 14, color: CM.palette.pinkDeep, weight: 800 });
+        D.rr(g, x0, SCHOOLGATE.y, 12, SCHOOLGATE.h, 4, '#fff', '#e8b9c8', 2);
+        D.rr(g, x0 + SCHOOLGATE.w - 12, SCHOOLGATE.y, 12, SCHOOLGATE.h, 4, '#fff', '#e8b9c8', 2);
+        D.rr(g, x0 + 12, SCHOOLGATE.y + 6, SCHOOLGATE.w - 24, SCHOOLGATE.h - 8, 6, '#ffd9e8', '#f0b9d2', 2);
+        // a little roof gable
+        g.fillStyle = '#ef8f6f';
+        g.beginPath(); g.moveTo(x0 + 4, SCHOOLGATE.y); g.lineTo(SCHOOLGATE.cx, SCHOOLGATE.y - 12); g.lineTo(x0 + SCHOOLGATE.w - 4, SCHOOLGATE.y); g.closePath(); g.fill();
+        D.text(g, 'ABC', SCHOOLGATE.cx, SCHOOLGATE.y + SCHOOLGATE.h / 2, { size: 14, color: CM.palette.pinkDeep, weight: 800 });
+      } });
+      // gate over to the playground (bottom-right) — a sunny archway
+      sprites.push({ y: PLAYGATE.y + PLAYGATE.h, fn: () => {
+        const x0 = PLAYGATE.cx - PLAYGATE.w / 2;
+        D.rr(g, PLAYGATE.cx - 54, PLAYGATE.y - 30, 108, 26, 9, '#fff', '#ffe1b0', 2.5);
+        D.text(g, '🛝 Playground', PLAYGATE.cx, PLAYGATE.y - 17, { size: 14, color: '#e08a2a', weight: 800 });
+        D.rr(g, x0, PLAYGATE.y, 12, PLAYGATE.h, 4, '#fff', '#e6c79a', 2);
+        D.rr(g, x0 + PLAYGATE.w - 12, PLAYGATE.y, 12, PLAYGATE.h, 4, '#fff', '#e6c79a', 2);
+        D.rr(g, x0 + 12, PLAYGATE.y + 6, PLAYGATE.w - 24, PLAYGATE.h - 8, 6, '#ffe6a8', '#f2c45a', 2);
+        D.star(g, x0 + 22, PLAYGATE.y + PLAYGATE.h / 2, 7, '#ff9ec7');
+        D.star(g, x0 + PLAYGATE.w - 22, PLAYGATE.y + PLAYGATE.h / 2, 7, '#8ecdf6');
+      } });
 
       // game stations (prop + host + sign)
       for (let i = 0; i < STATIONS.length; i++) {
@@ -366,6 +406,14 @@
           D.bubble(g, POOLGATE.cx - 82, POOLGATE.y - 92, 164, 44, POOLGATE.cx);
           D.text(g, '🏊 To the Pool!', POOLGATE.cx, POOLGATE.y - 76, { size: 14, weight: 800 });
           D.text(g, CM.touchMode ? 'tap ★ to swim' : 'press SPACE to swim', POOLGATE.cx, POOLGATE.y - 59, { size: 12, color: CM.palette.blueDeep });
+        } else if (near.type === 'play') {
+          D.bubble(g, CM.clamp(PLAYGATE.cx - 82, 8, CM.W - 172), PLAYGATE.y - 92, 164, 44, PLAYGATE.cx);
+          D.text(g, '🛝 To the Playground!', PLAYGATE.cx, PLAYGATE.y - 76, { size: 13, weight: 800 });
+          D.text(g, CM.touchMode ? 'tap ★ to play' : 'press SPACE to play', PLAYGATE.cx, PLAYGATE.y - 59, { size: 12, color: '#e08a2a' });
+        } else if (near.type === 'school') {
+          D.bubble(g, CM.clamp(SCHOOLGATE.cx - 82, 8, CM.W - 172), SCHOOLGATE.y - 92, 164, 44, SCHOOLGATE.cx);
+          D.text(g, '🏫 Off to School!', SCHOOLGATE.cx, SCHOOLGATE.y - 76, { size: 14, weight: 800 });
+          D.text(g, CM.touchMode ? 'tap ★ to go' : 'press SPACE to go', SCHOOLGATE.cx, SCHOOLGATE.y - 59, { size: 12, color: CM.palette.pinkDeep });
         } else {
           const st = near.station;
           const bx = CM.clamp(st.x - 80, 8, CM.W - 168);
@@ -377,8 +425,8 @@
 
       // ---- HUD + overlays ----
       const hint = CM.touchMode
-        ? 'Drag to walk  ·  ★ to play  ·  🏠 Inside  ·  🏊 Pool  ·  👗 dress up'
-        : 'Walk: click / WASD   ·   Play: SPACE   ·   🏠 Inside   ·   🏊 Pool   ·   👗 Dress Up';
+        ? '★ play · 🏠 Inside · 🏫 School · 🏊 Pool · 🛝 Playground'
+        : 'Play: SPACE  ·  🏠 Inside  ·  🏫 School  ·  🏊 Pool  ·  🛝 Playground  ·  👗 Dress Up';
       CM.hub.drawHud(this, g, hint);
       if (this.dialog) CM.hub.drawDialog(this, g, t);
       if (this.menu) CM.hub.drawMenu(this, g);
