@@ -129,7 +129,7 @@
     keys: Object.create(null),
     just: Object.create(null),
     mouse: { x: -999, y: -999, down: false, clicked: false, released: false },
-    joy: { x: 0, y: 0, active: false, baseX: 0, baseY: 0, dx: 0, dy: 0, id: null },
+    joy: { x: 0, y: 0, active: false, moved: false, baseX: 0, baseY: 0, dx: 0, dy: 0, id: null },
     virtualAction: false,
     _virtualJust: false,
     down(name) {
@@ -585,6 +585,9 @@
 
   function attachEvents() {
     let actTouchId = null;
+    // a touch in the joystick region stays a TAP until it drags past this many
+    // canvas units — so tapping (e.g. to walk somewhere) on the left side works
+    const JOY_DEADZONE = 14;
     window.addEventListener('keydown', (e) => {
       if (e.target && e.target.tagName === 'INPUT') return;
       const k = e.key.toLowerCase();
@@ -602,6 +605,7 @@
     window.addEventListener('blur', () => {
       input.keys = Object.create(null);
       input.joy.active = false; input.joy.x = 0; input.joy.y = 0; input.joy.id = null;
+      input.joy.moved = false;
       input.virtualAction = false;
       input.mouse.down = false;
       actTouchId = null;
@@ -630,8 +634,11 @@
         const p = toGame(t);
         const joyScene = CM.scene && CM.scene.joystick;
         if (joyScene && p.x < CM.W * 0.45 && p.y > CM.H * 0.3 && input.joy.id === null) {
+          // pending joystick — does NOT steer (and shows no stick) until it drags
+          // past JOY_DEADZONE; a release before then is treated as a tap
           input.joy.id = t.identifier;
-          input.joy.active = true;
+          input.joy.active = false;
+          input.joy.moved = false;
           input.joy.baseX = p.x; input.joy.baseY = p.y;
           input.joy.x = 0; input.joy.y = 0;
         } else if (joyScene && CM.dist(p.x, p.y, ACT_BTN.x, ACT_BTN.y) < ACT_BTN.r + 14 && actTouchId === null) {
@@ -649,8 +656,15 @@
       for (const t of e.changedTouches) {
         const p = toGame(t);
         if (t.identifier === input.joy.id) {
-          input.joy.x = CM.clamp((p.x - input.joy.baseX) / 48, -1, 1);
-          input.joy.y = CM.clamp((p.y - input.joy.baseY) / 48, -1, 1);
+          const dx = p.x - input.joy.baseX, dy = p.y - input.joy.baseY;
+          if (!input.joy.moved && Math.hypot(dx, dy) > JOY_DEADZONE) {
+            input.joy.moved = true;   // committed to a drag → become a live joystick
+            input.joy.active = true;
+          }
+          if (input.joy.active) {
+            input.joy.x = CM.clamp(dx / 48, -1, 1);
+            input.joy.y = CM.clamp(dy / 48, -1, 1);
+          }
         } else if (t.identifier !== actTouchId) {
           input.mouse.x = p.x; input.mouse.y = p.y;
         }
@@ -660,7 +674,13 @@
       e.preventDefault();
       for (const t of e.changedTouches) {
         if (t.identifier === input.joy.id) {
-          input.joy.id = null; input.joy.active = false;
+          if (!input.joy.moved) {
+            // never dragged → it was a tap: fire a click where the finger lifted
+            const p = toGame(t);
+            input.mouse.x = p.x; input.mouse.y = p.y;
+            input.mouse.down = false; input.mouse.clicked = true; input.mouse.released = true;
+          }
+          input.joy.id = null; input.joy.active = false; input.joy.moved = false;
           input.joy.x = 0; input.joy.y = 0;
         } else if (t.identifier === actTouchId) {
           actTouchId = null;
