@@ -18,6 +18,8 @@
   const PLAYGATE = { cx: 876, y: 522, w: 92, h: 44, frontX: 876, frontY: 506 };
   // gate off to school (bottom-left corner)
   const SCHOOLGATE = { cx: 86, y: 522, w: 92, h: 44, frontX: 86, frontY: 506 };
+  // cafe storefront on the right edge (mid-height) — its own little shop entrance
+  const CAFEGATE = { x: 876, y: 286, w: 64, h: 104, cx: 908, frontX: 842, frontY: 338 };
 
   // game stations (2 rows of 4): walk up to the friend and they invite you to play
   const STATIONS = [
@@ -189,7 +191,9 @@
       const gd = CM.dist(this.p.x, this.p.y, PLAYGATE.frontX, PLAYGATE.frontY);
       if (gd < 70 && gd < bestDist) { bestDist = gd; best = { type: 'play' }; }
       const cd = CM.dist(this.p.x, this.p.y, SCHOOLGATE.frontX, SCHOOLGATE.frontY);
-      if (cd < 70 && cd < bestDist) best = { type: 'school' };
+      if (cd < 70 && cd < bestDist) { bestDist = cd; best = { type: 'school' }; }
+      const fd = CM.dist(this.p.x, this.p.y, CAFEGATE.frontX, CAFEGATE.frontY);
+      if (fd < 72 && fd < bestDist) best = { type: 'cafe' };
       return best;
     },
 
@@ -209,6 +213,9 @@
       if (Math.abs(mx - SCHOOLGATE.cx) < SCHOOLGATE.w / 2 + 16 && my > SCHOOLGATE.y - 30) {
         return { type: 'school' };
       }
+      if (mx > CAFEGATE.x - 20 && my > CAFEGATE.y - 30 && my < CAFEGATE.y + CAFEGATE.h + 30) {
+        return { type: 'cafe' };
+      }
       return null;
     },
 
@@ -217,6 +224,7 @@
       if (it.type === 'pool') return { x: POOLGATE.frontX, y: POOLGATE.frontY, reach: 72 };
       if (it.type === 'play') return { x: PLAYGATE.frontX, y: PLAYGATE.frontY, reach: 72 };
       if (it.type === 'school') return { x: SCHOOLGATE.frontX, y: SCHOOLGATE.frontY, reach: 72 };
+      if (it.type === 'cafe') return { x: CAFEGATE.frontX, y: CAFEGATE.frontY, reach: 72 };
       return { x: it.station.x, y: it.station.y + 22, reach: 76 };
     },
 
@@ -226,6 +234,7 @@
       if (it.type === 'pool') { CM.audio.play('pop'); CM.switchScene('pool'); return; }
       if (it.type === 'play') { CM.audio.play('pop'); CM.switchScene('playground'); return; }
       if (it.type === 'school') { CM.audio.play('pop'); CM.switchScene('school'); return; }
+      if (it.type === 'cafe') { CM.audio.play('pop'); CM.switchScene('cafe'); return; }
       CM.audio.play('pop');
       const st = it.station;
       const name = (CM.save.character || {}).name || 'friend';
@@ -338,6 +347,30 @@
         D.star(g, x0 + 22, PLAYGATE.y + PLAYGATE.h / 2, 7, '#ff9ec7');
         D.star(g, x0 + PLAYGATE.w - 22, PLAYGATE.y + PLAYGATE.h / 2, 7, '#8ecdf6');
       } });
+      // cafe storefront on the right edge — a cute shop with a striped awning
+      sprites.push({ y: CAFEGATE.y + CAFEGATE.h, fn: () => {
+        const gx = CAFEGATE.x, gy = CAFEGATE.y, gw = CAFEGATE.w, gh = CAFEGATE.h;
+        // storefront wall
+        D.rr(g, gx - 16, gy - 14, gw + 32, gh + 22, 10, '#fff1e6', '#e8b48f', 3);
+        // window with a little cake
+        D.rr(g, gx - 10, gy + 8, 16, 26, 4, '#cdeeff', '#9ec9e6', 2);
+        D.rr(g, gx - 9, gy + 24, 14, 10, 2, '#ffd9e8');
+        D.circle(g, gx - 2, gy + 24, 2, '#ff5f8f');
+        // glass door
+        D.rr(g, gx + 12, gy, gw - 12, gh, 8, '#bfe3f5', '#9ec9e6', 3);
+        g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 2;
+        g.beginPath(); g.moveTo(gx + 12 + (gw - 12) / 2, gy + 8); g.lineTo(gx + 12 + (gw - 12) / 2, gy + gh - 8); g.stroke();
+        D.circle(g, gx + 12 + (gw - 12) / 2 - 5, gy + gh / 2, 2.5, '#e8a23a');
+        D.circle(g, gx + 12 + (gw - 12) / 2 + 5, gy + gh / 2, 2.5, '#e8a23a');
+        // striped awning
+        const ax = gx - 18, aw = gw + 36, ay = gy - 28, ah = 18;
+        for (let i = 0; i < 7; i++) { g.fillStyle = i % 2 ? '#ff9ec7' : '#fff7fb'; g.fillRect(ax + i * aw / 7, ay, aw / 7 + 0.6, ah); }
+        for (let i = 0; i < 7; i++) { g.fillStyle = i % 2 ? '#ff9ec7' : '#fff7fb'; D.circle(g, ax + (i + 0.5) * aw / 7, ay + ah, aw / 14, g.fillStyle); }
+        g.strokeStyle = '#e87faa'; g.lineWidth = 2; g.strokeRect(ax, ay, aw, ah);
+        // sign
+        D.rr(g, CAFEGATE.cx - 48, gy - 56, 96, 24, 9, '#fff', '#e8b48f', 2.5);
+        D.text(g, '☕ Cafe', CAFEGATE.cx, gy - 44, { size: 15, color: '#cf7a3a', weight: 800 });
+      } });
 
       // game stations (prop + host + sign)
       for (let i = 0; i < STATIONS.length; i++) {
@@ -414,6 +447,10 @@
           D.bubble(g, CM.clamp(SCHOOLGATE.cx - 82, 8, CM.W - 172), SCHOOLGATE.y - 92, 164, 44, SCHOOLGATE.cx);
           D.text(g, '🏫 Off to School!', SCHOOLGATE.cx, SCHOOLGATE.y - 76, { size: 14, weight: 800 });
           D.text(g, CM.touchMode ? 'tap ★ to go' : 'press SPACE to go', SCHOOLGATE.cx, SCHOOLGATE.y - 59, { size: 12, color: CM.palette.pinkDeep });
+        } else if (near.type === 'cafe') {
+          D.bubble(g, CM.clamp(CAFEGATE.frontX - 82, 8, CM.W - 172), CAFEGATE.frontY - 92, 164, 44, CAFEGATE.frontX);
+          D.text(g, '☕ Into the Cafe!', CAFEGATE.frontX, CAFEGATE.frontY - 76, { size: 14, weight: 800 });
+          D.text(g, CM.touchMode ? 'tap ★ to cook' : 'press SPACE to cook', CAFEGATE.frontX, CAFEGATE.frontY - 59, { size: 12, color: '#cf7a3a' });
         } else {
           const st = near.station;
           const bx = CM.clamp(st.x - 80, 8, CM.W - 168);
@@ -425,8 +462,8 @@
 
       // ---- HUD + overlays ----
       const hint = CM.touchMode
-        ? '★ play · 🏠 Inside · 🏫 School · 🏊 Pool · 🛝 Playground'
-        : 'Play: SPACE  ·  🏠 Inside  ·  🏫 School  ·  🏊 Pool  ·  🛝 Playground  ·  👗 Dress Up';
+        ? '★ play · 🏠 In · 🏫 School · ☕ Cafe · 🏊 Pool · 🛝 Play'
+        : 'SPACE play · 🏠 Inside · 🏫 School · ☕ Cafe · 🏊 Pool · 🛝 Playground';
       CM.hub.drawHud(this, g, hint);
       if (this.dialog) CM.hub.drawDialog(this, g, t);
       if (this.menu) CM.hub.drawMenu(this, g);

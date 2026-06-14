@@ -65,11 +65,11 @@ all the same friends are hanging out for some outdoor games:
 - 🚦 **Red Light, Green Light** — Keroppi points you to Badtz-Maru's game
 - 🦋 **Butterfly Catch** with My Melody — run around with your net
 
-Every friend hosts an outdoor game now! Walk up to a friend to play. From the
-backyard you can also tap **🏠 Inside** (top) for the mansion, **🏊 Pool**
-(bottom) for the pool, or **🛝 Playground** (bottom-right) for the playground.
-Earn coins in every game — your coins and best scores are saved automatically in
-your browser.
+Every friend hosts an outdoor game now! Walk up to a friend to play. The
+backyard is the crossroads to every other area: tap **🏠 Inside** (top) for the
+mansion, **🏫 School** (bottom-left), **🏊 Pool** (bottom), **🛝 Playground**
+(bottom-right), or the **☕ Cafe** storefront (right side). Earn coins in every
+game — your coins and best scores are saved automatically in your browser.
 
 ## The Pool 🏊
 
@@ -112,8 +112,24 @@ grade — the same friends are the teachers:
 - ✏️ **Spell It Out** with Cinnamoroll — finish the little (CVC) word
 - 🔷 **Shapes & Patterns** with Keroppi — what shape comes next?
 
-The five areas connect as **Mansion → Backyard → { School, Pool, Playground }** —
-wander between them all freely.
+## The Cafe ☕
+
+Through the cafe storefront on the **right side of the backyard** is the
+Cinnamoroll Cafe, where the friends are the chefs and you play
+*Cooking-Mama-style* cooking games — quick, hands-on kitchen tasks:
+
+- 🔪 **Chop Chop!** with Keroppi — tap to bring the knife down on the glowing line
+- 🥣 **Mix It Up** with My Melody — hold to stir the batter until it's fluffy
+- 🥞 **Flip 'Em!** with Pompompurin — flip each pancake when it turns golden
+- 🫖 **Pour It!** with Hello Kitty — hold to pour, let go right at the fill line
+- 🧁 **Frost the Cupcakes** with Cinnamoroll — match the frosting and topping to the order
+- 🥪 **Make a Sandwich** with Pochacco — stack the ingredients in the right order
+
+Nothing burns and nobody loses — a slightly dark pancake or a little spill is
+just funny. Tap **🌳 Backyard** at the top to head back.
+
+The six areas connect as **Mansion → Backyard → { School, Cafe, Pool,
+Playground }** — wander between them all freely.
 
 ## Pets & customizing them 🐾
 
