@@ -130,6 +130,8 @@
       c.top = ownedOf('top', CM.TOPC.length);
       c.bottom = ownedOf('bottom', CM.BOTC.length);
       c.acc = ownedOf('acc', CM.ACCESSORIES.length);
+      c.customTop = null;    // a random preset outfit replaces any custom design
+      c.customBottom = null;
       CM.audio.play('boing');
     },
     update() {},
@@ -180,9 +182,9 @@
       y += 54;
       swatchRow(g, 'Hair Color', y, CM.HAIRC, 'hairColor', c.hairColor, (i) => (c.hairColor = i));
       y += 54;
-      swatchRow(g, 'Top', y, CM.TOPC, 'top', c.top, (i) => (c.top = i));
+      swatchRow(g, 'Top', y, CM.TOPC, 'top', c.customTop ? -1 : c.top, (i) => { c.top = i; c.customTop = null; });
       y += 54;
-      swatchRow(g, 'Bottoms', y, CM.BOTC, 'bottom', c.bottom, (i) => (c.bottom = i));
+      swatchRow(g, 'Bottoms', y, CM.BOTC, 'bottom', c.customBottom ? -1 : c.bottom, (i) => { c.bottom = i; c.customBottom = null; });
       y += 54;
       // accessories cycle only through owned entries (premium ones unlock in the shop)
       arrowRow(g, 'Extra', y, CM.ACCESSORIES[c.acc], (d) => {

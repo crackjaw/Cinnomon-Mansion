@@ -449,6 +449,129 @@
     }
   }
 
+  /* ============================================================
+     Custom clothing — designs made in the Boutique. A design is
+     { garment:'top'|'bottom'|'dress', color, accent, pattern, motif }.
+     Worn designs live on the character as cfg.customTop / cfg.customBottom.
+     ============================================================ */
+  CM.GARMENT_COLORS  = ['#ff9ec7', '#ff5f8f', '#8ecdf6', '#5fa8e0', '#7fd6a0', '#3fc4a8',
+                        '#ffd24a', '#ffa64a', '#c9a8f0', '#9b7bd4', '#ffffff', '#4a3b46'];
+  CM.GARMENT_ACCENTS = ['#ffffff', '#ff5f8f', '#ffd24a', '#8ecdf6', '#7fd6a0', '#9b7bd4', '#ff8f4a', '#3a2f36'];
+  CM.GARMENT_PATTERNS = ['Solid', 'Stripes', 'Dots', 'Hearts', 'Stars', 'Checks', 'Rainbow'];
+  CM.GARMENT_MOTIFS   = ['None', 'Heart', 'Star', 'Flower', 'Bow', 'Dot'];
+  const RAINBOW = ['#ff8fae', '#ffc24a', '#ffe24a', '#7fd6a0', '#8ecdf6', '#c9a8f0'];
+
+  function rrTrace(g, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.arcTo(x + w, y, x + w, y + h, r);
+    g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r);
+    g.arcTo(x, y, x + w, y, r);
+    g.closePath();
+  }
+  function smallHeart(g, x, y, sz, c) {
+    g.fillStyle = c;
+    g.beginPath();
+    g.moveTo(x, y + 0.9 * sz);
+    g.bezierCurveTo(x - 1.1 * sz, y - 0.6 * sz, x - 2.0 * sz, y + 0.5 * sz, x, y + 1.7 * sz);
+    g.bezierCurveTo(x + 2.0 * sz, y + 0.5 * sz, x + 1.1 * sz, y - 0.6 * sz, x, y + 0.9 * sz);
+    g.fill();
+  }
+  function isLight(hex) {
+    hex = (hex || '#ffffff').replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map((c) => c + c).join('');
+    const r = parseInt(hex.slice(0, 2), 16), gg = parseInt(hex.slice(2, 4), 16), b = parseInt(hex.slice(4, 6), 16);
+    return (0.299 * r + 0.587 * gg + 0.114 * b) > 150;
+  }
+  function motifColorFor(d) { return isLight(d.color) ? '#ff4f9a' : '#ffffff'; }
+  CM.garmentIsLight = isLight;
+
+  function drawPatternMarks(g, design, bx, by, bw, bh) {
+    const pat = design.pattern || 'solid';
+    const acc = design.accent || '#ffffff';
+    if (pat === 'stripes') {
+      g.fillStyle = acc;
+      for (let xx = bx + 2; xx < bx + bw; xx += 8) g.fillRect(xx, by - 2, 4, bh + 4);
+    } else if (pat === 'dots') {
+      const sp = 8;
+      for (let row = 0, yy = by + 3; yy < by + bh; yy += sp, row++)
+        for (let xx = bx + 3 + (row % 2 ? sp / 2 : 0); xx < bx + bw; xx += sp) D.circle(g, xx, yy, 1.7, acc);
+    } else if (pat === 'hearts') {
+      const sp = 9;
+      for (let row = 0, yy = by + 4; yy < by + bh; yy += sp, row++)
+        for (let xx = bx + 4 + (row % 2 ? sp / 2 : 0); xx < bx + bw; xx += sp) smallHeart(g, xx, yy - 1.5, 1.3, acc);
+    } else if (pat === 'stars') {
+      const sp = 9;
+      for (let row = 0, yy = by + 5; yy < by + bh; yy += sp, row++)
+        for (let xx = bx + 4 + (row % 2 ? sp / 2 : 0); xx < bx + bw; xx += sp) D.star(g, xx, yy, 2.2, acc);
+    } else if (pat === 'checks') {
+      const sp = 6;
+      g.fillStyle = acc;
+      for (let row = 0, yy = by; yy < by + bh; yy += sp, row++)
+        for (let col = 0, xx = bx; xx < bx + bw; xx += sp, col++) if ((row + col) % 2 === 0) g.fillRect(xx, yy, sp, sp);
+    } else if (pat === 'rainbow') {
+      const band = bh / RAINBOW.length;
+      for (let i = 0; i < RAINBOW.length; i++) { g.fillStyle = RAINBOW[i]; g.fillRect(bx, by + i * band, bw, band + 0.6); }
+    }
+  }
+  function motifMark(g, motif, cx, cy, r, color) {
+    if (!motif || motif === 'none') return;
+    if (motif === 'heart') smallHeart(g, cx, cy - r * 0.7, r * 0.85, color);
+    else if (motif === 'star') D.star(g, cx, cy, r, color);
+    else if (motif === 'dot') D.circle(g, cx, cy, r * 0.8, color);
+    else if (motif === 'flower') {
+      for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; D.circle(g, cx + Math.cos(a) * r * 0.7, cy + Math.sin(a) * r * 0.7, r * 0.42, color); }
+      D.circle(g, cx, cy, r * 0.34, '#ffe07a');
+    } else if (motif === 'bow') {
+      g.fillStyle = color;
+      g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx - r, cy - r * 0.7); g.lineTo(cx - r, cy + r * 0.7); g.closePath(); g.fill();
+      g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + r, cy - r * 0.7); g.lineTo(cx + r, cy + r * 0.7); g.closePath(); g.fill();
+      D.circle(g, cx, cy, r * 0.34, color);
+    }
+  }
+  CM.garmentMotif = motifMark;
+
+  // Fill a garment shape (pathFn traces it onto g) with a design's colour + pattern (clipped to the shape).
+  CM.fillGarment = function (g, design, pathFn, bx, by, bw, bh) {
+    pathFn(g); g.fillStyle = (design && design.color) || '#ff9ec7'; g.fill();
+    if (design && design.pattern && design.pattern !== 'solid') {
+      g.save(); pathFn(g); g.clip();
+      drawPatternMarks(g, design, bx, by, bw, bh);
+      g.restore();
+    }
+  };
+
+  // A small garment icon (for shop-style cards & the closet). Centred at (cx, cy).
+  CM.drawDesignIcon = function (g, design, cx, cy, scale) {
+    scale = scale || 1;
+    g.save();
+    g.translate(cx, cy);
+    g.scale(scale, scale);
+    const garm = design.garment || 'top';
+    if (garm === 'bottom') {
+      const path = (gg) => { gg.beginPath(); gg.moveTo(-12, -14); gg.lineTo(12, -14); gg.lineTo(18, 16); gg.lineTo(-18, 16); gg.closePath(); };
+      CM.fillGarment(g, design, path, -18, -14, 36, 30);
+      g.strokeStyle = design.accent || '#fff'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(-18, 16); g.lineTo(18, 16); g.stroke();
+      g.strokeStyle = 'rgba(0,0,0,0.12)'; g.lineWidth = 2; path(g); g.stroke();
+    } else {
+      const bot = garm === 'dress' ? 30 : 14;
+      const path = (gg) => {
+        gg.beginPath();
+        gg.moveTo(-14, -16); gg.lineTo(-22, -8); gg.lineTo(-15, -2); gg.lineTo(-13, bot);
+        gg.lineTo(13, bot); gg.lineTo(15, -2); gg.lineTo(22, -8); gg.lineTo(14, -16);
+        gg.quadraticCurveTo(0, -10, -14, -16); gg.closePath();
+      };
+      CM.fillGarment(g, design, path, -22, -16, 44, bot + 16);
+      g.strokeStyle = 'rgba(0,0,0,0.12)'; g.lineWidth = 2; path(g); g.stroke();
+      g.strokeStyle = design.accent || '#fff'; g.lineWidth = 2.5; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(-6, -13); g.quadraticCurveTo(0, -8, 6, -13); g.stroke();
+      motifMark(g, design.motif, 0, garm === 'dress' ? -2 : 0, 4.5, motifColorFor(design));
+    }
+    g.restore();
+  };
+
   /**
    * Draw the player with feet at (x, y).
    * facing: 'down' | 'up' | 'left' | 'right'
@@ -464,6 +587,8 @@
     const hc = CM.HAIRC[cfg.hairColor] || CM.HAIRC[0];
     const tc = CM.TOPC[cfg.top] || CM.TOPC[0];
     const bc = CM.BOTC[cfg.bottom] || CM.BOTC[0];
+    const ct = cfg.customTop || null;    // designed top  { color, accent, pattern, motif }
+    const cb = cfg.customBottom || null; // designed bottom
     const girl = cfg.body !== 'boy';
     const up = facing === 'up';
 
@@ -479,7 +604,7 @@
     // legs + shoes (alternating little steps)
     const liftL = walking ? Math.max(0, sw) * 4 : 0;
     const liftR = walking ? Math.max(0, -sw) * 4 : 0;
-    const legColor = girl ? skin : bc;
+    const legColor = girl ? skin : (cb ? (cb.color || '#ff9ec7') : bc);
     D.rr(g, -11, -18 - liftL, 8, 18 + liftL - 2, 4, legColor);
     D.rr(g, 3, -18 - liftR, 8, 18 + liftR - 2, 4, legColor);
     D.ellipse(g, -7, -2 - liftL, 7.5, 4.5, '#fff', '#d8c8d2', 1.5);
@@ -487,25 +612,41 @@
 
     // bottom
     if (girl) {
-      g.fillStyle = bc;
-      g.beginPath();
-      g.moveTo(-15, -33);
-      g.lineTo(15, -33);
-      g.lineTo(20, -15);
-      g.lineTo(-20, -15);
-      g.closePath();
-      g.fill();
+      const skirtPath = (gg) => { gg.beginPath(); gg.moveTo(-15, -33); gg.lineTo(15, -33); gg.lineTo(20, -15); gg.lineTo(-20, -15); gg.closePath(); };
+      if (cb) {
+        CM.fillGarment(g, cb, skirtPath, -20, -33, 40, 18);
+        g.strokeStyle = cb.accent || '#fff'; g.lineWidth = 2; g.lineCap = 'round';
+        g.beginPath(); g.moveTo(-20, -15); g.lineTo(20, -15); g.stroke();
+      } else {
+        g.fillStyle = bc; skirtPath(g); g.fill();
+      }
     } else {
-      D.rr(g, -14, -32, 28, 16, 6, bc);
+      const shortsPath = (gg) => rrTrace(gg, -14, -32, 28, 16, 6);
+      if (cb) {
+        CM.fillGarment(g, cb, shortsPath, -14, -32, 28, 16);
+      } else {
+        D.rr(g, -14, -32, 28, 16, 6, bc);
+      }
       g.strokeStyle = 'rgba(0,0,0,0.15)';
       g.lineWidth = 1.5;
       g.beginPath(); g.moveTo(0, -28); g.lineTo(0, -17); g.stroke();
     }
 
     // torso + arms
-    D.rr(g, -14, -50, 28, 22, 10, tc);
-    D.ellipse(g, -17, -38, 5, 8.5, tc);
-    D.ellipse(g, 17, -38, 5, 8.5, tc);
+    if (ct) {
+      const topPath = (gg) => rrTrace(gg, -14, -50, 28, 22, 10);
+      CM.fillGarment(g, ct, topPath, -14, -50, 28, 22);
+      const tcol = ct.color || '#ff9ec7';
+      D.ellipse(g, -17, -38, 5, 8.5, tcol);
+      D.ellipse(g, 17, -38, 5, 8.5, tcol);
+      g.strokeStyle = ct.accent || '#fff'; g.lineWidth = 2.5; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(-7, -49); g.quadraticCurveTo(0, -44.5, 7, -49); g.stroke();
+      motifMark(g, ct.motif, 0, -39.5, 4.2, motifColorFor(ct));
+    } else {
+      D.rr(g, -14, -50, 28, 22, 10, tc);
+      D.ellipse(g, -17, -38, 5, 8.5, tc);
+      D.ellipse(g, 17, -38, 5, 8.5, tc);
+    }
     D.circle(g, -17, -31, 3.4, skin); // hands
     D.circle(g, 17, -31, 3.4, skin);
 

@@ -269,13 +269,13 @@
       function () { ch.hairColor = (ch.hairColor - 1 + CM.HAIRC.length) % CM.HAIRC.length; persist(); },
       function () { ch.hairColor = (ch.hairColor + 1) % CM.HAIRC.length; persist(); });
     y += step;
-    menuRow(g, 'Top', y, '', CM.TOPC[ch.top],
-      function () { ch.top = hub.stepOwned('top', CM.TOPC.length, ch.top, -1); persist(); },
-      function () { ch.top = hub.stepOwned('top', CM.TOPC.length, ch.top, 1); persist(); });
+    menuRow(g, 'Top', y, ch.customTop ? '✨ Custom' : '', ch.customTop ? null : CM.TOPC[ch.top],
+      function () { ch.customTop = null; ch.top = hub.stepOwned('top', CM.TOPC.length, ch.top, -1); persist(); },
+      function () { ch.customTop = null; ch.top = hub.stepOwned('top', CM.TOPC.length, ch.top, 1); persist(); });
     y += step;
-    menuRow(g, 'Bottoms', y, '', CM.BOTC[ch.bottom],
-      function () { ch.bottom = hub.stepOwned('bottom', CM.BOTC.length, ch.bottom, -1); persist(); },
-      function () { ch.bottom = hub.stepOwned('bottom', CM.BOTC.length, ch.bottom, 1); persist(); });
+    menuRow(g, 'Bottoms', y, ch.customBottom ? '✨ Custom' : '', ch.customBottom ? null : CM.BOTC[ch.bottom],
+      function () { ch.customBottom = null; ch.bottom = hub.stepOwned('bottom', CM.BOTC.length, ch.bottom, -1); persist(); },
+      function () { ch.customBottom = null; ch.bottom = hub.stepOwned('bottom', CM.BOTC.length, ch.bottom, 1); persist(); });
     y += step;
     menuRow(g, 'Extra', y, CM.ACCESSORIES[ch.acc], null,
       function () { ch.acc = hub.stepOwned('acc', CM.ACCESSORIES.length, ch.acc, -1); persist(); },

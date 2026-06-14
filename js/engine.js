@@ -37,7 +37,7 @@
 
   /* ---------------- save data ---------------- */
   const SAVE_KEY = 'cinnamoroll-mansion-v1';
-  CM.save = { coins: 0, best: {}, plays: {}, character: null, muted: false, owned: {}, pet: null, petColor: 0, petAcc: 0, petName: '' };
+  CM.save = { coins: 0, best: {}, plays: {}, character: null, muted: false, owned: {}, pet: null, petColor: 0, petAcc: 0, petName: '', customDesigns: [] };
   CM.persist = function () {
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(CM.save)); } catch (e) { /* private mode */ }
   };
@@ -56,6 +56,7 @@
       if (typeof d.petColor === 'number') CM.save.petColor = d.petColor;
       if (typeof d.petAcc === 'number') CM.save.petAcc = d.petAcc;
       if (typeof d.petName === 'string') CM.save.petName = d.petName.slice(0, 12);
+      if (Array.isArray(d.customDesigns)) CM.save.customDesigns = d.customDesigns.slice(0, 24);
       CM.save.muted = !!d.muted;
     } catch (e) { /* ignore corrupt save */ }
   };
@@ -87,7 +88,7 @@
     CM.registerScene('game-' + game.id, game);
   };
   CM._returnHub = 'mansion'; // which hub a finished/quit game returns to
-  CM.HUBS = { mansion: 'Mansion', backyard: 'Backyard', pool: 'Pool', playground: 'Playground', school: 'School', cafe: 'Cafe' };
+  CM.HUBS = { mansion: 'Mansion', backyard: 'Backyard', pool: 'Pool', playground: 'Playground', school: 'School', cafe: 'Cafe', boutique: 'Boutique' };
   CM.startGame = function (id) {
     if (!CM.games[id]) return;
     // remember which hub we launched from (not when replaying from the results screen)

@@ -68,8 +68,9 @@ all the same friends are hanging out for some outdoor games:
 Every friend hosts an outdoor game now! Walk up to a friend to play. The
 backyard is the crossroads to every other area: tap **🏠 Inside** (top) for the
 mansion, **🏫 School** (bottom-left), **🏊 Pool** (bottom), **🛝 Playground**
-(bottom-right), or the **☕ Cafe** storefront (right side). Earn coins in every
-game — your coins and best scores are saved automatically in your browser.
+(bottom-right), the **☕ Cafe** storefront (right side), or the **👗 Boutique**
+storefront (left side). Earn coins in every game — your coins and best scores
+are saved automatically in your browser.
 
 ## The Pool 🏊
 
@@ -128,8 +129,25 @@ Cinnamoroll Cafe, where the friends are the chefs and you play
 Nothing burns and nobody loses — a slightly dark pancake or a little spill is
 just funny. Tap **🌳 Backyard** at the top to head back.
 
-The six areas connect as **Mansion → Backyard → { School, Cafe, Pool,
-Playground }** — wander between them all freely.
+## The Boutique 👗
+
+Through the boutique storefront on the **left side of the backyard** is the
+Boutique, where you **make your own clothes!** Walk up to **My Melody's Design
+Studio** to open the designer and create a custom outfit:
+
+- **Garment** — a top, a skirt, or a whole dress
+- **Colour** — pick from a rainbow of fabric colours
+- **Pattern** — solid, stripes, polka dots, hearts, stars, checks or rainbow
+- **Trim** — a contrasting colour for the collar and hem
+- **Motif** — add a little heart, star, flower, bow or dot on the front
+
+Your design updates live on your character. Tap **👗 Wear It!** to put it on
+(it shows everywhere you go), or **💾 Save** it to your **Closet** to wear again
+later. Open **🗂 My Closet** (or the My Designs button) to re-wear or remove any
+saved design. There's also a **🪞 mirror** for the regular Dress-Up menu.
+
+The seven areas connect as **Mansion → Backyard → { Boutique, School, Cafe,
+Pool, Playground }** — wander between them all freely.
 
 ## Pets & customizing them 🐾
 

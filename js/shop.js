@@ -63,6 +63,9 @@
     } else {
       if (!CM.save.character) CM.save.character = CM.defaultCharacter();
       CM.save.character[tab] = item.index;
+      // a preset garment replaces any custom-designed one in that slot
+      if (tab === 'top') CM.save.character.customTop = null;
+      else if (tab === 'bottom') CM.save.character.customBottom = null;
     }
     CM.persist();
   }
@@ -73,6 +76,9 @@
     const c = {};
     for (const k in base) c[k] = base[k];
     c[tab] = item.index;
+    // show the preset being tried on, not a custom design masking it
+    if (tab === 'top') c.customTop = null;
+    else if (tab === 'bottom') c.customBottom = null;
     return c;
   }
 

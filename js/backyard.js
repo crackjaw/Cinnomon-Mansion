@@ -20,6 +20,8 @@
   const SCHOOLGATE = { cx: 86, y: 522, w: 92, h: 44, frontX: 86, frontY: 506 };
   // cafe storefront on the right edge (mid-height) — its own little shop entrance
   const CAFEGATE = { x: 876, y: 286, w: 64, h: 104, cx: 908, frontX: 842, frontY: 338 };
+  // boutique storefront on the left edge (mid-height) — make-your-own-clothes shop
+  const SHOPGATE = { x: 20, y: 286, w: 64, h: 104, cx: 52, frontX: 118, frontY: 338 };
 
   // game stations (2 rows of 4): walk up to the friend and they invite you to play
   const STATIONS = [
@@ -193,7 +195,9 @@
       const cd = CM.dist(this.p.x, this.p.y, SCHOOLGATE.frontX, SCHOOLGATE.frontY);
       if (cd < 70 && cd < bestDist) { bestDist = cd; best = { type: 'school' }; }
       const fd = CM.dist(this.p.x, this.p.y, CAFEGATE.frontX, CAFEGATE.frontY);
-      if (fd < 72 && fd < bestDist) best = { type: 'cafe' };
+      if (fd < 72 && fd < bestDist) { bestDist = fd; best = { type: 'cafe' }; }
+      const sd = CM.dist(this.p.x, this.p.y, SHOPGATE.frontX, SHOPGATE.frontY);
+      if (sd < 72 && sd < bestDist) best = { type: 'boutique' };
       return best;
     },
 
@@ -216,6 +220,9 @@
       if (mx > CAFEGATE.x - 20 && my > CAFEGATE.y - 30 && my < CAFEGATE.y + CAFEGATE.h + 30) {
         return { type: 'cafe' };
       }
+      if (mx < SHOPGATE.x + SHOPGATE.w + 20 && my > SHOPGATE.y - 30 && my < SHOPGATE.y + SHOPGATE.h + 30) {
+        return { type: 'boutique' };
+      }
       return null;
     },
 
@@ -225,6 +232,7 @@
       if (it.type === 'play') return { x: PLAYGATE.frontX, y: PLAYGATE.frontY, reach: 72 };
       if (it.type === 'school') return { x: SCHOOLGATE.frontX, y: SCHOOLGATE.frontY, reach: 72 };
       if (it.type === 'cafe') return { x: CAFEGATE.frontX, y: CAFEGATE.frontY, reach: 72 };
+      if (it.type === 'boutique') return { x: SHOPGATE.frontX, y: SHOPGATE.frontY, reach: 72 };
       return { x: it.station.x, y: it.station.y + 22, reach: 76 };
     },
 
@@ -235,6 +243,7 @@
       if (it.type === 'play') { CM.audio.play('pop'); CM.switchScene('playground'); return; }
       if (it.type === 'school') { CM.audio.play('pop'); CM.switchScene('school'); return; }
       if (it.type === 'cafe') { CM.audio.play('pop'); CM.switchScene('cafe'); return; }
+      if (it.type === 'boutique') { CM.audio.play('pop'); CM.switchScene('boutique'); return; }
       CM.audio.play('pop');
       const st = it.station;
       const name = (CM.save.character || {}).name || 'friend';
@@ -371,6 +380,29 @@
         D.rr(g, CAFEGATE.cx - 48, gy - 56, 96, 24, 9, '#fff', '#e8b48f', 2.5);
         D.text(g, '☕ Cafe', CAFEGATE.cx, gy - 44, { size: 15, color: '#cf7a3a', weight: 800 });
       } });
+      // boutique storefront on the left edge — a cute clothes shop with a striped awning
+      sprites.push({ y: SHOPGATE.y + SHOPGATE.h, fn: () => {
+        const gx = SHOPGATE.x, gy = SHOPGATE.y, gw = SHOPGATE.w, gh = SHOPGATE.h;
+        // storefront wall
+        D.rr(g, gx - 16, gy - 14, gw + 32, gh + 22, 10, '#fff0f6', '#e8a9c8', 3);
+        // window with a little dress on show (toward the yard)
+        D.rr(g, gx + gw - 4, gy + 8, 16, 26, 4, '#ffe6f0', '#e8a9c8', 2);
+        CM.drawDesignIcon(g, { garment: 'dress', color: '#ff9ec7', accent: '#fff', pattern: 'dots', motif: 'heart' }, gx + gw + 4, gy + 22, 0.5);
+        // glass door (near the left edge)
+        D.rr(g, gx, gy, gw - 12, gh, 8, '#fbe3f0', '#e6a9c8', 3);
+        g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 2;
+        g.beginPath(); g.moveTo(gx + (gw - 12) / 2, gy + 8); g.lineTo(gx + (gw - 12) / 2, gy + gh - 8); g.stroke();
+        D.circle(g, gx + (gw - 12) / 2 - 5, gy + gh / 2, 2.5, '#cf6a9a');
+        D.circle(g, gx + (gw - 12) / 2 + 5, gy + gh / 2, 2.5, '#cf6a9a');
+        // striped awning
+        const ax = gx - 16, aw = gw + 34, ay = gy - 28, ah = 18;
+        for (let i = 0; i < 7; i++) { g.fillStyle = i % 2 ? '#ff9ec7' : '#fff7fb'; g.fillRect(ax + i * aw / 7, ay, aw / 7 + 0.6, ah); }
+        for (let i = 0; i < 7; i++) { g.fillStyle = i % 2 ? '#ff9ec7' : '#fff7fb'; D.circle(g, ax + (i + 0.5) * aw / 7, ay + ah, aw / 14, g.fillStyle); }
+        g.strokeStyle = '#e87faa'; g.lineWidth = 2; g.strokeRect(ax, ay, aw, ah);
+        // sign
+        D.rr(g, SHOPGATE.cx - 52, gy - 56, 104, 24, 9, '#fff', '#e8a9c8', 2.5);
+        D.text(g, '👗 Boutique', SHOPGATE.cx, gy - 44, { size: 14, color: CM.palette.pinkDeep, weight: 800 });
+      } });
 
       // game stations (prop + host + sign)
       for (let i = 0; i < STATIONS.length; i++) {
@@ -451,6 +483,10 @@
           D.bubble(g, CM.clamp(CAFEGATE.frontX - 82, 8, CM.W - 172), CAFEGATE.frontY - 92, 164, 44, CAFEGATE.frontX);
           D.text(g, '☕ Into the Cafe!', CAFEGATE.frontX, CAFEGATE.frontY - 76, { size: 14, weight: 800 });
           D.text(g, CM.touchMode ? 'tap ★ to cook' : 'press SPACE to cook', CAFEGATE.frontX, CAFEGATE.frontY - 59, { size: 12, color: '#cf7a3a' });
+        } else if (near.type === 'boutique') {
+          D.bubble(g, CM.clamp(SHOPGATE.frontX - 82, 8, CM.W - 172), SHOPGATE.frontY - 92, 164, 44, SHOPGATE.frontX);
+          D.text(g, '👗 Into the Boutique!', SHOPGATE.frontX, SHOPGATE.frontY - 76, { size: 13, weight: 800 });
+          D.text(g, CM.touchMode ? 'tap ★ to shop' : 'press SPACE to shop', SHOPGATE.frontX, SHOPGATE.frontY - 59, { size: 12, color: CM.palette.pinkDeep });
         } else {
           const st = near.station;
           const bx = CM.clamp(st.x - 80, 8, CM.W - 168);
@@ -462,8 +498,8 @@
 
       // ---- HUD + overlays ----
       const hint = CM.touchMode
-        ? '★ play · 🏠 In · 🏫 School · ☕ Cafe · 🏊 Pool · 🛝 Play'
-        : 'SPACE play · 🏠 Inside · 🏫 School · ☕ Cafe · 🏊 Pool · 🛝 Playground';
+        ? '🏠 · 👗 Shop · 🏫 School · ☕ Cafe · 🏊 Pool · 🛝 Play'
+        : '🏠 Inside · 👗 Boutique · 🏫 School · ☕ Cafe · 🏊 Pool · 🛝 Play';
       CM.hub.drawHud(this, g, hint);
       if (this.dialog) CM.hub.drawDialog(this, g, t);
       if (this.menu) CM.hub.drawMenu(this, g);
