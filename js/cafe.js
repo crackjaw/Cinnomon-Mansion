@@ -3,17 +3,13 @@
    The Cinnamoroll Cafe: cozy little eatery where you play
    Cooking-Mama-style cooking games — chopping, mixing, flipping
    pancakes, pouring drinks, frosting cupcakes and building
-   sandwiches. Reached from the backyard's cafe storefront; the
-   door at the top returns to the backyard. Shares movement /
-   dialog / dress-up menu / pet via CM.hub.
+   sandwiches. Reached from the Town map; leave with the 🗺 Town
+   button. Shares movement / dialog / dress-up menu / pet via CM.hub.
    ============================================================ */
 (function () {
   'use strict';
   const CM = window.CM;
   const D = CM.draw;
-
-  // door back out to the backyard (top-centre)
-  const BACK = { gate: { x: 432, y: 14, w: 96, h: 58 }, frontX: 480, frontY: 120 };
 
   // cooking stations (2 rows of 3) — every friend is a little chef
   const STATIONS = [
@@ -123,8 +119,6 @@
         const d = CM.dist(this.p.x, this.p.y, st.x, st.y);
         if (d < bestDist) { bestDist = d; best = { type: 'station', station: st }; }
       }
-      const bd = CM.dist(this.p.x, this.p.y, BACK.frontX, BACK.frontY);
-      if (bd < 72 && bd < bestDist) best = { type: 'back' };
       return best;
     },
 
@@ -132,20 +126,15 @@
       for (const st of STATIONS) {
         if (CM.dist(mx, my, st.x, st.y - 30) < 60) return { type: 'station', station: st };
       }
-      if (mx > BACK.gate.x - 16 && mx < BACK.gate.x + BACK.gate.w + 16 && my < BACK.gate.y + BACK.gate.h + 30) {
-        return { type: 'back' };
-      }
       return null;
     },
 
     interactAnchor(it) {
-      if (it.type === 'back') return { x: BACK.frontX, y: BACK.frontY, reach: 72 };
       return { x: it.station.x, y: it.station.y + 22, reach: 80 };
     },
 
     triggerInteract(it) {
       const P = CM.palette;
-      if (it.type === 'back') { CM.audio.play('pop'); CM.switchScene('backyard'); return; }
       CM.audio.play('pop');
       const st = it.station;
       const name = (CM.save.character || {}).name || 'friend';
@@ -215,17 +204,6 @@
       // a soft rug in the middle
       D.ellipse(g, 480, 360, 150, 70, 'rgba(255,158,199,0.16)', 'rgba(255,158,199,0.3)', 3);
 
-      // door back to the backyard
-      const gt = BACK.gate;
-      D.rr(g, gt.x - 8, gt.y - 6, gt.w + 16, gt.h + 10, 9, '#fff', '#e8c9a0', 3);
-      D.rr(g, gt.x, gt.y, gt.w, gt.h, 6, '#cdeedd', '#9ecbb0', 2.5);     // glass door to the garden
-      g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 2;
-      g.beginPath(); g.moveTo(gt.x + gt.w / 2, gt.y + 4); g.lineTo(gt.x + gt.w / 2, gt.y + gt.h - 4); g.stroke();
-      D.circle(g, gt.x + gt.w / 2 - 6, gt.y + gt.h / 2, 3, '#e8a23a');
-      D.circle(g, gt.x + gt.w / 2 + 6, gt.y + gt.h / 2, 3, '#e8a23a');
-      D.rr(g, gt.x + gt.w / 2 - 56, gt.y + gt.h + 6, 112, 24, 9, '#fff', '#cfe6c4', 2.5);
-      D.text(g, '🌳 Backyard', gt.x + gt.w / 2, gt.y + gt.h + 18, { size: 13, color: CM.palette.mintDeep, weight: 800 });
-
       // ---- depth-sorted sprites ----
       const sprites = [];
 
@@ -290,23 +268,17 @@
       // ---- prompts ----
       const near = (this.dialog || this.menu) ? null : this.nearestInteract();
       if (near) {
-        if (near.type === 'back') {
-          D.bubble(g, BACK.frontX - 80, BACK.frontY + 6, 160, 44, BACK.frontX);
-          D.text(g, '🌳 Back to backyard', BACK.frontX, BACK.frontY + 22, { size: 13, weight: 800 });
-          D.text(g, CM.touchMode ? 'tap ★ to go' : 'press SPACE to go', BACK.frontX, BACK.frontY + 39, { size: 12, color: CM.palette.mintDeep });
-        } else {
-          const st = near.station;
-          const bx = CM.clamp(st.x - 80, 8, CM.W - 168);
-          D.bubble(g, bx, st.y - 150, 160, 48, st.x);
-          D.text(g, st.emoji + ' ' + st.label + '!', bx + 80, st.y - 133, { size: 15, weight: 800 });
-          D.text(g, CM.touchMode ? 'tap ★ to cook' : 'press SPACE to cook', bx + 80, st.y - 115, { size: 12, color: '#cf7a3a' });
-        }
+        const st = near.station;
+        const bx = CM.clamp(st.x - 80, 8, CM.W - 168);
+        D.bubble(g, bx, st.y - 150, 160, 48, st.x);
+        D.text(g, st.emoji + ' ' + st.label + '!', bx + 80, st.y - 133, { size: 15, weight: 800 });
+        D.text(g, CM.touchMode ? 'tap ★ to cook' : 'press SPACE to cook', bx + 80, st.y - 115, { size: 12, color: '#cf7a3a' });
       }
 
       // ---- HUD + overlays ----
       const hint = CM.touchMode
-        ? 'Drag to walk  ·  ★ to cook  ·  🌳 backyard  ·  👗 dress up'
-        : 'Walk: click / WASD   ·   Cook: SPACE   ·   🌳 Backyard   ·   👗 Dress Up';
+        ? 'Drag to walk  ·  ★ to cook  ·  🗺 town  ·  👗 dress up'
+        : 'Walk: click / WASD   ·   Cook: SPACE   ·   🗺 Town   ·   👗 Dress Up';
       CM.hub.drawHud(this, g, hint);
       if (this.dialog) CM.hub.drawDialog(this, g, t);
       if (this.menu) CM.hub.drawMenu(this, g);

@@ -1,17 +1,14 @@
 /* ============================================================
    Cinnamoroll Mansion — pool hub
    The poolside area: same friends, water-themed mini-games.
-   Reached from the backyard's pool gate; the gate at the top
-   goes back to the backyard. Shares movement / dialog / dress-up
-   menu / pet with the other hubs via CM.hub.
+   Reached from the Town map; leave with the 🗺 Town button.
+   Shares movement / dialog / dress-up menu / pet with the other
+   hubs via CM.hub.
    ============================================================ */
 (function () {
   'use strict';
   const CM = window.CM;
   const D = CM.draw;
-
-  // gate back up to the backyard (top-centre)
-  const BACK = { gate: { x: 432, y: 8, w: 96, h: 62 }, frontX: 480, frontY: 118 };
 
   // the swimming pool (a solid — you walk the deck around it)
   const POOL = { x: 300, y: 220, w: 360, h: 206 };
@@ -133,8 +130,6 @@
         const d = CM.dist(this.p.x, this.p.y, st.x, st.y);
         if (d < bestDist) { bestDist = d; best = { type: 'station', station: st }; }
       }
-      const bd = CM.dist(this.p.x, this.p.y, BACK.frontX, BACK.frontY);
-      if (bd < 72 && bd < bestDist) best = { type: 'back' };
       return best;
     },
 
@@ -142,20 +137,15 @@
       for (const st of STATIONS) {
         if (CM.dist(mx, my, st.x, st.y - 30) < 60) return { type: 'station', station: st };
       }
-      if (mx > BACK.gate.x - 16 && mx < BACK.gate.x + BACK.gate.w + 16 && my < BACK.gate.y + BACK.gate.h + 30) {
-        return { type: 'back' };
-      }
       return null;
     },
 
     interactAnchor(it) {
-      if (it.type === 'back') return { x: BACK.frontX, y: BACK.frontY, reach: 72 };
       return { x: it.station.x, y: it.station.y + 22, reach: 78 };
     },
 
     triggerInteract(it) {
       const P = CM.palette;
-      if (it.type === 'back') { CM.audio.play('pop'); CM.switchScene('backyard'); return; }
       CM.audio.play('pop');
       const st = it.station;
       const name = (CM.save.character || {}).name || 'friend';
@@ -216,15 +206,6 @@
       for (const lx of [POOL.x + 40, POOL.x + 58]) { g.beginPath(); g.moveTo(lx, POOL.y - 6); g.lineTo(lx, POOL.y + 40); g.stroke(); }
       for (let i = 0; i < 3; i++) { g.beginPath(); g.moveTo(POOL.x + 40, POOL.y + 4 + i * 14); g.lineTo(POOL.x + 58, POOL.y + 4 + i * 14); g.stroke(); }
 
-      // back gate (to the backyard)
-      const gt = BACK.gate;
-      D.rr(g, gt.x - 6, gt.y - 4, gt.w + 12, gt.h + 8, 9, '#fff', '#cfe6c4', 3);
-      const pw = (gt.w - 6) / 2;
-      for (let i = 0; i < 2; i++) D.rr(g, gt.x + 2 + i * (pw + 2), gt.y, pw, gt.h, 6, '#bfe8c8', '#8fce9d', 2);
-      D.circle(g, gt.x + gt.w / 2, gt.y + gt.h / 2, 3.5, '#ffd24a');
-      D.rr(g, gt.x + gt.w / 2 - 56, gt.y + gt.h + 6, 112, 24, 9, '#fff', '#cfe6c4', 2.5);
-      D.text(g, '🌳 Backyard', gt.x + gt.w / 2, gt.y + gt.h + 18, { size: 13, color: CM.palette.mintDeep, weight: 800 });
-
       // ---- depth-sorted sprites ----
       const sprites = [];
       // poolside umbrellas / chairs decor
@@ -276,23 +257,17 @@
       // ---- prompts ----
       const near = (this.dialog || this.menu) ? null : this.nearestInteract();
       if (near) {
-        if (near.type === 'back') {
-          D.bubble(g, BACK.frontX - 80, BACK.frontY + 6, 160, 44, BACK.frontX);
-          D.text(g, '🌳 Back to backyard', BACK.frontX, BACK.frontY + 22, { size: 13, weight: 800 });
-          D.text(g, CM.touchMode ? 'tap ★ to go' : 'press SPACE to go', BACK.frontX, BACK.frontY + 39, { size: 12, color: CM.palette.mintDeep });
-        } else {
-          const st = near.station;
-          const bx = CM.clamp(st.x - 80, 8, CM.W - 168);
-          D.bubble(g, bx, st.y - 150, 160, 48, st.x);
-          D.text(g, st.emoji + ' ' + st.label + '!', bx + 80, st.y - 133, { size: 15, weight: 800 });
-          D.text(g, CM.touchMode ? 'tap ★ to play' : 'press SPACE to play', bx + 80, st.y - 115, { size: 12, color: CM.palette.blueDeep });
-        }
+        const st = near.station;
+        const bx = CM.clamp(st.x - 80, 8, CM.W - 168);
+        D.bubble(g, bx, st.y - 150, 160, 48, st.x);
+        D.text(g, st.emoji + ' ' + st.label + '!', bx + 80, st.y - 133, { size: 15, weight: 800 });
+        D.text(g, CM.touchMode ? 'tap ★ to play' : 'press SPACE to play', bx + 80, st.y - 115, { size: 12, color: CM.palette.blueDeep });
       }
 
       // ---- HUD + overlays ----
       const hint = CM.touchMode
-        ? 'Drag to walk  ·  ★ to play  ·  🌳 backyard  ·  👗 dress up'
-        : 'Walk: click / WASD   ·   Play: SPACE   ·   🌳 Backyard   ·   👗 Dress Up';
+        ? 'Drag to walk  ·  ★ to play  ·  🗺 town  ·  👗 dress up'
+        : 'Walk: click / WASD   ·   Play: SPACE   ·   🗺 Town   ·   👗 Dress Up';
       CM.hub.drawHud(this, g, hint);
       if (this.dialog) CM.hub.drawDialog(this, g, t);
       if (this.menu) CM.hub.drawMenu(this, g);

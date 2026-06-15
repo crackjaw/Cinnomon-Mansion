@@ -2,16 +2,13 @@
    Cinnamoroll Mansion — playground hub
    The playground: same friends, playground mini-games (swings,
    sand castle, tag, seesaw, monkey bars, kites). Reached from the
-   backyard's playground gate; the gate at the top returns to the
-   backyard. Shares movement / dialog / dress-up menu / pet via CM.hub.
+   Town map; leave with the 🗺 Town button. Shares movement /
+   dialog / dress-up menu / pet via CM.hub.
    ============================================================ */
 (function () {
   'use strict';
   const CM = window.CM;
   const D = CM.draw;
-
-  // gate back to the backyard (top-centre)
-  const BACK = { gate: { x: 432, y: 8, w: 96, h: 62 }, frontX: 480, frontY: 118 };
 
   // game stations (2 rows of 3)
   const STATIONS = [
@@ -136,8 +133,6 @@
         const d = CM.dist(this.p.x, this.p.y, st.x, st.y);
         if (d < bestDist) { bestDist = d; best = { type: 'station', station: st }; }
       }
-      const bd = CM.dist(this.p.x, this.p.y, BACK.frontX, BACK.frontY);
-      if (bd < 72 && bd < bestDist) best = { type: 'back' };
       return best;
     },
 
@@ -145,20 +140,15 @@
       for (const st of STATIONS) {
         if (CM.dist(mx, my, st.x, st.y - 30) < 60) return { type: 'station', station: st };
       }
-      if (mx > BACK.gate.x - 16 && mx < BACK.gate.x + BACK.gate.w + 16 && my < BACK.gate.y + BACK.gate.h + 30) {
-        return { type: 'back' };
-      }
       return null;
     },
 
     interactAnchor(it) {
-      if (it.type === 'back') return { x: BACK.frontX, y: BACK.frontY, reach: 72 };
       return { x: it.station.x, y: it.station.y + 22, reach: 80 };
     },
 
     triggerInteract(it) {
       const P = CM.palette;
-      if (it.type === 'back') { CM.audio.play('pop'); CM.switchScene('backyard'); return; }
       CM.audio.play('pop');
       const st = it.station;
       const name = (CM.save.character || {}).name || 'friend';
@@ -208,16 +198,9 @@
       g.fillRect(0, 32, CM.W, 20);
       for (let x = 14; x < CM.W; x += 40) D.circle(g, x, 38, 13, '#8fd6a0');
 
-      // back gate (to the backyard)
-      const gt = BACK.gate;
+      // a soft pink wall band below the hedge (where the gate used to be)
       g.fillStyle = '#f7d7e6';
       g.fillRect(0, 0, CM.W, 34);
-      D.rr(g, gt.x - 6, gt.y - 4, gt.w + 12, gt.h + 8, 9, '#fff', '#cfe6c4', 3);
-      const pw = (gt.w - 6) / 2;
-      for (let i = 0; i < 2; i++) D.rr(g, gt.x + 2 + i * (pw + 2), gt.y, pw, gt.h, 6, '#bfe8c8', '#8fce9d', 2);
-      D.circle(g, gt.x + gt.w / 2, gt.y + gt.h / 2, 3.5, '#ffd24a');
-      D.rr(g, gt.x + gt.w / 2 - 56, gt.y + gt.h + 6, 112, 24, 9, '#fff', '#cfe6c4', 2.5);
-      D.text(g, '🌳 Backyard', gt.x + gt.w / 2, gt.y + gt.h + 18, { size: 13, color: CM.palette.mintDeep, weight: 800 });
 
       // flat ground decor
       const fc = ['#ff9ec7', '#fff', '#ffd24a', '#c9a8f0'];
@@ -269,23 +252,17 @@
       // ---- prompts ----
       const near = (this.dialog || this.menu) ? null : this.nearestInteract();
       if (near) {
-        if (near.type === 'back') {
-          D.bubble(g, BACK.frontX - 80, BACK.frontY + 6, 160, 44, BACK.frontX);
-          D.text(g, '🌳 Back to backyard', BACK.frontX, BACK.frontY + 22, { size: 13, weight: 800 });
-          D.text(g, CM.touchMode ? 'tap ★ to go' : 'press SPACE to go', BACK.frontX, BACK.frontY + 39, { size: 12, color: CM.palette.mintDeep });
-        } else {
-          const st = near.station;
-          const bx = CM.clamp(st.x - 80, 8, CM.W - 168);
-          D.bubble(g, bx, st.y - 150, 160, 48, st.x);
-          D.text(g, st.emoji + ' ' + st.label + '!', bx + 80, st.y - 133, { size: 15, weight: 800 });
-          D.text(g, CM.touchMode ? 'tap ★ to play' : 'press SPACE to play', bx + 80, st.y - 115, { size: 12, color: '#e08a2a' });
-        }
+        const st = near.station;
+        const bx = CM.clamp(st.x - 80, 8, CM.W - 168);
+        D.bubble(g, bx, st.y - 150, 160, 48, st.x);
+        D.text(g, st.emoji + ' ' + st.label + '!', bx + 80, st.y - 133, { size: 15, weight: 800 });
+        D.text(g, CM.touchMode ? 'tap ★ to play' : 'press SPACE to play', bx + 80, st.y - 115, { size: 12, color: '#e08a2a' });
       }
 
       // ---- HUD + overlays ----
       const hint = CM.touchMode
-        ? 'Drag to walk  ·  ★ to play  ·  🌳 backyard  ·  👗 dress up'
-        : 'Walk: click / WASD   ·   Play: SPACE   ·   🌳 Backyard   ·   👗 Dress Up';
+        ? 'Drag to walk  ·  ★ to play  ·  🗺 town  ·  👗 dress up'
+        : 'Walk: click / WASD   ·   Play: SPACE   ·   🗺 Town   ·   👗 Dress Up';
       CM.hub.drawHud(this, g, hint);
       if (this.dialog) CM.hub.drawDialog(this, g, t);
       if (this.menu) CM.hub.drawMenu(this, g);
