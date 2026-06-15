@@ -88,7 +88,7 @@
     CM.registerScene('game-' + game.id, game);
   };
   CM._returnHub = 'mansion'; // which hub a finished/quit game returns to
-  CM.HUBS = { town: 'Town', mansion: 'Mansion', backyard: 'Backyard', pool: 'Pool', playground: 'Playground', school: 'School', cafe: 'Cafe', boutique: 'Boutique' };
+  CM.HUBS = { town: 'Town', mansion: 'Mansion', backyard: 'Backyard', pool: 'Pool', playground: 'Playground', school: 'School', cafe: 'Cafe', boutique: 'Boutique', artstudio: 'Art Studio' };
   CM.startGame = function (id) {
     if (!CM.games[id]) return;
     // remember which hub we launched from (not when replaying from the results screen)
