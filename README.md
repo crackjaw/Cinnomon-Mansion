@@ -157,7 +157,20 @@ Your design updates live on your character. Tap **👗 Wear It!** to put it on
 later. Open **🗂 My Closet** (or the My Designs button) to re-wear or remove any
 saved design. There's also a **🪞 mirror** for the regular Dress-Up menu.
 
-All seven areas hang off the **🗺 Cinnamon Town** overworld — pick any of them
+## The Art Studio 🎨
+
+Pick the **🎨 Art Studio** from the town map to reach the Art Studio, where you can let your creativity shine in six relaxing art mini-games:
+
+- 🖍️ **Coloring** with Hello Kitty — pick colors and fill the picture
+- 🏺 **Pottery** with Pompompurin — spin the wheel and shape the clay
+- 🎨 **Spin Art** with Badtz-Maru — drop paint on a spinning canvas
+- ✨ **Bead Art** with My Melody — place beads to match the pattern
+- ✏️ **Tracing** with Cinnamoroll — follow the dotted line
+- ⭐ **Stickers** with Pochacco — decorate your scrapbook page
+
+Tap **🗺 Town** to head back to the map.
+
+All eight areas hang off the **🗺 Cinnamon Town** overworld — pick any of them
 from the town map, and hop back to the town from any area with the **🗺 Town**
 button. The town is the hub: areas no longer link directly to one another, so
 every trip between areas goes through the town map.

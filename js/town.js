@@ -21,9 +21,10 @@
     { scene: 'school',     label: 'School',     emoji: '🏫', row: 'top',    cx: 362, wall: '#ffe3ef', roof: '#ef8f6f', edge: '#cf6f4f', trim: '#f0b9d2' },
     { scene: 'cafe',       label: 'Cafe',       emoji: '☕', row: 'top',    cx: 600, wall: '#fff1e6', roof: '#e0a05a', edge: '#cf7a3a', trim: '#e8b48f', awning: true },
     { scene: 'pool',       label: 'Pool',       emoji: '🏊', row: 'top',    cx: 838, wall: '#dff2ff', roof: '#6bb6dd', edge: '#4a9fdc', trim: '#9ec9e6' },
-    { scene: 'boutique',   label: 'Boutique',   emoji: '👗', row: 'bottom', cx: 202, wall: '#fff0f6', roof: '#ef8fb6', edge: '#cf6a9a', trim: '#e8a9c8', awning: true },
-    { scene: 'playground', label: 'Playground', emoji: '🛝', row: 'bottom', cx: 480, wall: '#fff3d6', roof: '#f2c45a', edge: '#e0a32a', trim: '#f2c45a' },
-    { scene: 'backyard',   label: 'Backyard',   emoji: '🌳', row: 'bottom', cx: 760, park: true }
+    { scene: 'boutique',   label: 'Boutique',   emoji: '👗', row: 'bottom', cx: 122, wall: '#fff0f6', roof: '#ef8fb6', edge: '#cf6a9a', trim: '#e8a9c8', awning: true },
+    { scene: 'playground', label: 'Playground', emoji: '🛝', row: 'bottom', cx: 362, wall: '#fff3d6', roof: '#f2c45a', edge: '#e0a32a', trim: '#f2c45a' },
+    { scene: 'artstudio',  label: 'Art Studio', emoji: '🎨', row: 'bottom', cx: 600, wall: '#f4e6ff', roof: '#b18cf0', edge: '#8b5dd6', trim: '#d9c2f0' },
+    { scene: 'backyard',   label: 'Backyard',   emoji: '🌳', row: 'bottom', cx: 838, park: true }
   ];
 
   // compute building geometry once at load
