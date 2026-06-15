@@ -22,6 +22,7 @@
 
   const hub = (CM.hub = {});
   const DRESS_BTN = (hub.DRESS_BTN = { x: 700, y: 12, w: 150, h: 34 });
+  const TOWN_BTN = (hub.TOWN_BTN = { x: 538, y: 12, w: 150, h: 34 });
 
   function inRect(p, r) { return p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h; }
   hub.inRect = inRect;
@@ -108,7 +109,7 @@
     }
 
     // click to walk — or click an interactable to walk over and use it
-    if (inp.mouse.clicked && !inRect(inp.mouse, DRESS_BTN)) {
+    if (inp.mouse.clicked && !inRect(inp.mouse, DRESS_BTN) && !inRect(inp.mouse, TOWN_BTN)) {
       const it = scene.clickInteract(inp.mouse.x, inp.mouse.y);
       const a = it ? scene.interactAnchor(it) : { x: inp.mouse.x, y: inp.mouse.y };
       scene.target = {
@@ -189,8 +190,16 @@
       D.rr(g, 142, 12, 30 + ch.name.length * 11, 36, 18, 'rgba(255,255,255,0.85)', '#bcd9f0', 2);
       D.text(g, ch.name, 157 + ch.name.length * 5.5, 31, { size: 17, color: CM.palette.blueDeep, weight: 800 });
     }
-    // dress-up button (top-right, clear of the reserved mute corner)
+    // town map + dress-up buttons (top-right, clear of the reserved mute corner)
     if (!scene.dialog && !scene.menu) {
+      // a one-tap hop back to the town overworld (hidden while you're in the town)
+      if (CM.sceneName !== 'town' &&
+        CM.ui.button(g, TOWN_BTN.x, TOWN_BTN.y, TOWN_BTN.w, TOWN_BTN.h, '🗺 Town',
+          { color: CM.palette.mintDeep, size: 16, r: 17 })) {
+        CM.audio.play('pop');
+        CM.switchScene('town');
+        return;
+      }
       if (CM.ui.button(g, DRESS_BTN.x, DRESS_BTN.y, DRESS_BTN.w, DRESS_BTN.h, '👗 Dress Up',
         { color: CM.palette.lavenderDeep, size: 16, r: 17 })) {
         hub.openMenu(scene);

@@ -123,7 +123,7 @@
       const hasChar = !!CM.save.character;
       if (hasChar) {
         if (CM.ui.button(g, 355, 480, 250, 56, '▶  Continue', { color: CM.palette.pinkDeep, size: 24 })) {
-          CM.switchScene('mansion');
+          CM.switchScene('town');
           return;
         }
         if (CM.ui.button(g, 380, 545, 200, 40, 'New Character', { color: CM.palette.blueDeep, size: 17 })) {
