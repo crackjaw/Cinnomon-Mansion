@@ -199,8 +199,8 @@
       if (CM.ui.button(g, 60, 552, 210, 42, '🎲 Surprise Me!', { color: CM.palette.lavenderDeep, size: 18 })) {
         this.randomize();
       }
-      // return to whichever hub opened the editor (mansion by default)
-      const returnHub = CM.HUBS[this.from] ? this.from : 'mansion';
+      // return to whichever hub opened the editor (the town overworld by default)
+      const returnHub = CM.HUBS[this.from] ? this.from : 'town';
       if (CM.HUBS[this.from]) {
         if (CM.ui.button(g, 300, 552, 150, 42, 'Cancel', { color: '#b9a8b3', size: 17 })) {
           CM.switchScene(returnHub);

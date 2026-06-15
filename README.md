@@ -35,6 +35,20 @@ it like a real app.
 | Mute / unmute | M | speaker button (top right) |
 | Fullscreen | — | ⛶ button (top right, in the mansion) |
 
+## 🗺 Cinnamon Town (the overworld)
+
+When you press **Continue** (or finish making your character) you arrive in
+**Cinnamon Town** — a cute little town map that's the hub for everything. Walk
+around the plaza (with its splashy fountain) and walk up to — or just tap — any
+building to visit that area:
+
+- 🏰 **Mansion** · 🏫 **School** · ☕ **Cafe** · 🏊 **Pool** (along the top)
+- 👗 **Boutique** · 🛝 **Playground** · 🌳 **Backyard** (along the bottom)
+
+Once you're inside an area, tap the **🗺 Town** button (top of the screen) any
+time to pop back out to the town and pick somewhere else. The areas still
+connect to each other directly too (the backyard remains a handy crossroads).
+
 ## The games
 
 - 🎳 **Bowling** with Hello Kitty
@@ -146,8 +160,10 @@ Your design updates live on your character. Tap **👗 Wear It!** to put it on
 later. Open **🗂 My Closet** (or the My Designs button) to re-wear or remove any
 saved design. There's also a **🪞 mirror** for the regular Dress-Up menu.
 
-The seven areas connect as **Mansion → Backyard → { Boutique, School, Cafe,
-Pool, Playground }** — wander between them all freely.
+All seven areas hang off the **🗺 Cinnamon Town** overworld — pick any of them
+from the town map, and hop back to the town from any area with the **🗺 Town**
+button. They also still connect to each other directly (**Mansion → Backyard →
+{ Boutique, School, Cafe, Pool, Playground }**) — wander between them all freely.
 
 ## Pets & customizing them 🐾
 
