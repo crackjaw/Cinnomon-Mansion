@@ -268,6 +268,20 @@
       const sprites = [];
       sprites.push({ y: 176, fn: () => tree(g, 70, 176, 1) });
       sprites.push({ y: 176, fn: () => tree(g, 892, 176, 1) });
+      // extra edge greenery to fill the borders where the old gates used to be
+      sprites.push({ y: 470, fn: () => tree(g, 60, 470, 0.78) });
+      sprites.push({ y: 470, fn: () => tree(g, 902, 470, 0.78) });
+      sprites.push({ y: 338, fn: () => { bush(g, 52, 338, 1.15); flower(g, 38, 326, '#ff9ec7'); flower(g, 66, 330, '#ffd24a'); } });
+      sprites.push({ y: 338, fn: () => { bush(g, 908, 338, 1.15); flower(g, 894, 326, '#c9a8f0'); flower(g, 922, 330, '#ffffff'); } });
+      sprites.push({ y: 560, fn: () => bush(g, 58, 560, 1.0) });
+      sprites.push({ y: 560, fn: () => bush(g, 902, 560, 1.0) });
+      // a cheerful flower bed where the pool gate used to be (bottom-centre)
+      sprites.push({ y: 556, fn: () => {
+        D.rr(g, 420, 550, 120, 22, 7, '#cf9b5a', '#a9794a', 2);
+        D.rr(g, 420, 546, 120, 8, 4, '#e8c39a');
+        const fcb = ['#ff9ec7', '#ffffff', '#ffd24a', '#c9a8f0', '#8ecdf6'];
+        for (let i = 0; i < 7; i++) flower(g, 432 + i * 16, 552 + (i % 2) * 4, fcb[i % 5]);
+      } });
 
       // game stations (prop + host + sign)
       for (let i = 0; i < STATIONS.length; i++) {
