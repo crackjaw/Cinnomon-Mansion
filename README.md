@@ -46,8 +46,8 @@ building to visit that area:
 - 👗 **Boutique** · 🛝 **Playground** · 🌳 **Backyard** (along the bottom)
 
 Once you're inside an area, tap the **🗺 Town** button (top of the screen) any
-time to pop back out to the town and pick somewhere else. The areas still
-connect to each other directly too (the backyard remains a handy crossroads).
+time to pop back out to the town and pick somewhere else. The town is the only
+way between areas — there are no doors directly linking one area to another.
 
 ## The games
 
@@ -67,7 +67,7 @@ out in the mansion.
 
 ### 🌳 The Backyard
 
-Head out the **patio door** (bottom-left of the mansion) to the backyard, where
+Pick the **🌳 Backyard** from the town map to reach the outdoor area, where
 all the same friends are hanging out for some outdoor games:
 
 - ⛳ **Putt-Putt** mini-golf with Pompompurin — pull back and putt!
@@ -79,16 +79,13 @@ all the same friends are hanging out for some outdoor games:
 - 🚦 **Red Light, Green Light** — Keroppi points you to Badtz-Maru's game
 - 🦋 **Butterfly Catch** with My Melody — run around with your net
 
-Every friend hosts an outdoor game now! Walk up to a friend to play. The
-backyard is the crossroads to every other area: tap **🏠 Inside** (top) for the
-mansion, **🏫 School** (bottom-left), **🏊 Pool** (bottom), **🛝 Playground**
-(bottom-right), the **☕ Cafe** storefront (right side), or the **👗 Boutique**
-storefront (left side). Earn coins in every game — your coins and best scores
-are saved automatically in your browser.
+Every friend hosts an outdoor game now! Walk up to a friend to play, then tap
+**🗺 Town** to head back to the map and choose another area. Earn coins in every
+game — your coins and best scores are saved automatically in your browser.
 
 ## The Pool 🏊
 
-Through the pool gate at the bottom of the backyard is the swimming pool, with six
+Pick the **🏊 Pool** from the town map to reach the swimming pool, with six
 splashy water games — all the same friends are here too:
 
 - 🌊 **Cannonball Splash** with Keroppi — time your bounce for the biggest splash
@@ -98,12 +95,12 @@ splashy water games — all the same friends are here too:
 - 🦆 **Duck Round-Up** with My Melody — tap the rubber duckies before they drift off
 - 🔫 **Squirt Splash** with Kuromi — squirt the targets that pop up (whack-a-mole!)
 
-Tap **🌳 Backyard** at the top of the pool to head back.
+Tap **🗺 Town** to head back to the map.
 
 ## The Playground 🛝
 
-Through the playground gate at the bottom-right of the backyard is the
-playground, with six more games — the same friends are here too:
+Pick the **🛝 Playground** from the town map to reach the playground, with six
+more games — the same friends are here too:
 
 - 🥏 **Swing Jump** with My Melody — pump the swing, then jump off and fly far
 - 🏃 **Tag, You're It!** with Pochacco — chase and tag all your friends
@@ -112,13 +109,13 @@ playground, with six more games — the same friends are here too:
 - 🪁 **Kite Flying** with Cinnamoroll — steer the kite through rings and gusts
 - ⚖️ **Seesaw Pop** with Pompompurin — bounce Keroppi up to pop the balloons
 
-Tap **🌳 Backyard** at the top to head back.
+Tap **🗺 Town** to head back to the map.
 
 ## The School 🏫
 
-Through the school gate at the bottom-left of the backyard is the schoolyard,
-with a ride there plus learning games for a kindergartener heading into 1st
-grade — the same friends are the teachers:
+Pick the **🏫 School** from the town map to reach the schoolyard, with a ride
+there plus learning games for a kindergartener heading into 1st grade — the
+same friends are the teachers:
 
 - 🏍️ **Ride to School** with Badtz-Maru — jump your motorbike over obstacles
 - 🔢 **Counting Fun** with My Melody — count the objects, tap the number
@@ -129,9 +126,9 @@ grade — the same friends are the teachers:
 
 ## The Cafe ☕
 
-Through the cafe storefront on the **right side of the backyard** is the
-Cinnamoroll Cafe, where the friends are the chefs and you play
-*Cooking-Mama-style* cooking games — quick, hands-on kitchen tasks:
+Pick the **☕ Cafe** from the town map to reach the Cinnamoroll Cafe, where the
+friends are the chefs and you play *Cooking-Mama-style* cooking games — quick,
+hands-on kitchen tasks:
 
 - 🔪 **Chop Chop!** with Keroppi — tap to bring the knife down on the glowing line
 - 🥣 **Mix It Up** with My Melody — hold to stir the batter until it's fluffy
@@ -141,13 +138,13 @@ Cinnamoroll Cafe, where the friends are the chefs and you play
 - 🥪 **Make a Sandwich** with Pochacco — stack the ingredients in the right order
 
 Nothing burns and nobody loses — a slightly dark pancake or a little spill is
-just funny. Tap **🌳 Backyard** at the top to head back.
+just funny. Tap **🗺 Town** to head back to the map.
 
 ## The Boutique 👗
 
-Through the boutique storefront on the **left side of the backyard** is the
-Boutique, where you **make your own clothes!** Walk up to **My Melody's Design
-Studio** to open the designer and create a custom outfit:
+Pick the **👗 Boutique** from the town map to reach the Boutique, where you
+**make your own clothes!** Walk up to **My Melody's Design Studio** to open the
+designer and create a custom outfit:
 
 - **Garment** — a top, a skirt, or a whole dress
 - **Colour** — pick from a rainbow of fabric colours
@@ -162,8 +159,8 @@ saved design. There's also a **🪞 mirror** for the regular Dress-Up menu.
 
 All seven areas hang off the **🗺 Cinnamon Town** overworld — pick any of them
 from the town map, and hop back to the town from any area with the **🗺 Town**
-button. They also still connect to each other directly (**Mansion → Backyard →
-{ Boutique, School, Cafe, Pool, Playground }**) — wander between them all freely.
+button. The town is the hub: areas no longer link directly to one another, so
+every trip between areas goes through the town map.
 
 ## Pets & customizing them 🐾
 

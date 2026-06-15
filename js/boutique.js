@@ -2,17 +2,13 @@
    Cinnamoroll Mansion — boutique hub
    A little clothing store where you walk up to the Design Studio
    to MAKE YOUR OWN CLOTHES, browse your Closet, or use the mirror
-   to dress up. Reached from the backyard's boutique storefront
-   (left side); the door at the top returns to the backyard.
-   Shares movement / dialog / dress-up menu / pet via CM.hub.
+   to dress up. Reached from the Town map; leave with the 🗺 Town
+   button. Shares movement / dialog / dress-up menu / pet via CM.hub.
    ============================================================ */
 (function () {
   'use strict';
   const CM = window.CM;
   const D = CM.draw;
-
-  // door back out to the backyard (top-centre)
-  const BACK = { gate: { x: 432, y: 14, w: 96, h: 58 }, frontX: 480, frontY: 120 };
 
   // things to walk up to
   const SPOTS = [
@@ -90,8 +86,6 @@
         const d = CM.dist(this.p.x, this.p.y, s.x, s.y + 18);
         if (d < bestDist) { bestDist = d; best = { type: s.type, spot: s }; }
       }
-      const bd = CM.dist(this.p.x, this.p.y, BACK.frontX, BACK.frontY);
-      if (bd < 72 && bd < bestDist) best = { type: 'back' };
       return best;
     },
 
@@ -99,20 +93,15 @@
       for (const s of SPOTS) {
         if (CM.dist(mx, my, s.x, s.y - 20) < 66) return { type: s.type, spot: s };
       }
-      if (mx > BACK.gate.x - 16 && mx < BACK.gate.x + BACK.gate.w + 16 && my < BACK.gate.y + BACK.gate.h + 30) {
-        return { type: 'back' };
-      }
       return null;
     },
 
     interactAnchor(it) {
-      if (it.type === 'back') return { x: BACK.frontX, y: BACK.frontY, reach: 72 };
       return { x: it.spot.x, y: it.spot.y + 36, reach: 86 };
     },
 
     triggerInteract(it) {
       const P = CM.palette;
-      if (it.type === 'back') { CM.audio.play('pop'); CM.switchScene('backyard'); return; }
       CM.audio.play('pop');
       const name = (CM.save.character || {}).name || 'friend';
       if (it.type === 'studio') {
@@ -174,17 +163,6 @@
           if ((row + col) % 2 === 0) { g.fillStyle = 'rgba(255,255,255,0.35)'; g.fillRect(xx, yy, ts, ts); }
       // a soft runway rug down the middle
       D.rr(g, 410, 150, 140, 410, 16, 'rgba(255,158,199,0.16)', 'rgba(255,158,199,0.3)', 3);
-
-      // door back to the backyard
-      const gt = BACK.gate;
-      D.rr(g, gt.x - 8, gt.y - 6, gt.w + 16, gt.h + 10, 9, '#fff', '#e8c9d8', 3);
-      D.rr(g, gt.x, gt.y, gt.w, gt.h, 6, '#cdeedd', '#9ecbb0', 2.5);
-      g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 2;
-      g.beginPath(); g.moveTo(gt.x + gt.w / 2, gt.y + 4); g.lineTo(gt.x + gt.w / 2, gt.y + gt.h - 4); g.stroke();
-      D.circle(g, gt.x + gt.w / 2 - 6, gt.y + gt.h / 2, 3, '#e8a23a');
-      D.circle(g, gt.x + gt.w / 2 + 6, gt.y + gt.h / 2, 3, '#e8a23a');
-      D.rr(g, gt.x + gt.w / 2 - 56, gt.y + gt.h + 6, 112, 24, 9, '#fff', '#cfe6c4', 2.5);
-      D.text(g, '🌳 Backyard', gt.x + gt.w / 2, gt.y + gt.h + 18, { size: 13, color: CM.palette.mintDeep, weight: 800 });
 
       // clothing racks along the back wall (decor)
       function rack(g2, x0, y0, items) {
@@ -260,24 +238,18 @@
       // ---- prompts ----
       const near = (this.dialog || this.menu) ? null : this.nearestInteract();
       if (near) {
-        if (near.type === 'back') {
-          D.bubble(g, BACK.frontX - 80, BACK.frontY + 6, 160, 44, BACK.frontX);
-          D.text(g, '🌳 Back to backyard', BACK.frontX, BACK.frontY + 22, { size: 13, weight: 800 });
-          D.text(g, CM.touchMode ? 'tap ★ to go' : 'press SPACE to go', BACK.frontX, BACK.frontY + 39, { size: 12, color: CM.palette.mintDeep });
-        } else {
-          const s = near.spot;
-          const bx = CM.clamp(s.x - 80, 8, CM.W - 168);
-          const verb = s.type === 'studio' ? 'design' : (s.type === 'closet' ? 'open' : 'dress up');
-          D.bubble(g, bx, s.y - 132, 160, 48, s.x);
-          D.text(g, s.emoji + ' ' + s.label + '!', bx + 80, s.y - 115, { size: 15, weight: 800 });
-          D.text(g, (CM.touchMode ? 'tap ★ to ' : 'press SPACE to ') + verb, bx + 80, s.y - 97, { size: 12, color: CM.palette.pinkDeep });
-        }
+        const s = near.spot;
+        const bx = CM.clamp(s.x - 80, 8, CM.W - 168);
+        const verb = s.type === 'studio' ? 'design' : (s.type === 'closet' ? 'open' : 'dress up');
+        D.bubble(g, bx, s.y - 132, 160, 48, s.x);
+        D.text(g, s.emoji + ' ' + s.label + '!', bx + 80, s.y - 115, { size: 15, weight: 800 });
+        D.text(g, (CM.touchMode ? 'tap ★ to ' : 'press SPACE to ') + verb, bx + 80, s.y - 97, { size: 12, color: CM.palette.pinkDeep });
       }
 
       // ---- HUD + overlays ----
       const hint = CM.touchMode
-        ? 'Drag to walk  ·  ✂️ design  ·  🪞 dress up  ·  🌳 backyard'
-        : 'Walk: click / WASD   ·   ✂️ Make clothes: SPACE   ·   🌳 Backyard   ·   👗 Dress Up';
+        ? 'Drag to walk  ·  ✂️ design  ·  🪞 dress up  ·  🗺 town'
+        : 'Walk: click / WASD   ·   ✂️ Make clothes: SPACE   ·   🗺 Town   ·   👗 Dress Up';
       CM.hub.drawHud(this, g, hint);
       if (this.dialog) CM.hub.drawDialog(this, g, t);
       if (this.menu) CM.hub.drawMenu(this, g);

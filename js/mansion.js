@@ -33,8 +33,6 @@
   const SHOP = { cx: 175, counterY: 470, counterW: 132, counterH: 30, hostY: 468, frontX: 175, frontY: 526 };
   // Badtz-Maru naps on the sofa; talk to him here to play Red Light, Green Light.
   const SOFA = { hostX: 628, hostY: 446, frontX: 628, frontY: 496 };
-  // patio door to the backyard (bottom-left, by the wardrobe/shop corner)
-  const BACKYARD = { door: { x: 62, y: 560, w: 106, h: 40 }, frontX: 115, frontY: 544 };
   const SOLIDS = [
     { x: 545, y: 415, w: 165, h: 58 },  // sofa
     { x: 272, y: 438, w: 70, h: 46 },   // cake table
@@ -93,24 +91,6 @@
     D.text(g, d.emoji + ' ' + d.label, r.x + r.w / 2, r.y - 23, { size: 14, color: CM.palette.ink, weight: 800 });
   }
 
-  function drawBackyardDoor(g) {
-    const r = BACKYARD.door;
-    // frame
-    D.rr(g, r.x - 6, r.y - 6, r.w + 12, r.h + 10, 10, '#fff', '#cfe6c4', 3);
-    // two glass panels showing greenery outside
-    const pw = (r.w - 6) / 2;
-    for (let i = 0; i < 2; i++) {
-      const px = r.x + 2 + i * (pw + 2);
-      D.rr(g, px, r.y, pw, r.h, 6, '#bfe8c8', '#8fce9d', 2);
-      D.ellipse(g, px + pw / 2, r.y + r.h - 6, pw * 0.4, 8, '#8fd6a0');
-      D.circle(g, px + pw * 0.35, r.y + 12, 4, '#ffd24a'); // little sun/flower
-    }
-    D.circle(g, r.x + r.w / 2, r.y + r.h / 2, 3.5, '#b9824a'); // handles
-    // sign
-    D.rr(g, r.x - 4, r.y - 36, r.w + 8, 26, 9, '#fff', '#cfe6c4', 2.5);
-    D.text(g, '🌳 Backyard', r.x + r.w / 2, r.y - 23, { size: 14, color: CM.palette.mintDeep, weight: 800 });
-  }
-
   CM.registerScene('mansion', {
     joystick: true,
     enter() {
@@ -140,9 +120,7 @@
       const sd = CM.dist(this.p.x, this.p.y, SHOP.frontX, SHOP.frontY);
       if (sd < 70 && sd < bestDist) { bestDist = sd; best = { type: 'shop' }; }
       const fd = CM.dist(this.p.x, this.p.y, SOFA.frontX, SOFA.frontY);
-      if (fd < 66 && fd < bestDist) { bestDist = fd; best = { type: 'sofa' }; }
-      const yd = CM.dist(this.p.x, this.p.y, BACKYARD.frontX, BACKYARD.frontY);
-      if (yd < 70 && yd < bestDist) best = { type: 'backyard' };
+      if (fd < 66 && fd < bestDist) best = { type: 'sofa' };
       return best;
     },
 
@@ -160,9 +138,6 @@
       if (Math.abs(mx - SOFA.hostX) < 90 && my > SOFA.hostY - 50 && my < SOFA.frontY + 20) {
         return { type: 'sofa' };
       }
-      if (mx > BACKYARD.door.x - 18 && mx < BACKYARD.door.x + BACKYARD.door.w + 18 && my > BACKYARD.door.y - 40) {
-        return { type: 'backyard' };
-      }
       return null;
     },
 
@@ -170,7 +145,6 @@
       if (it.type === 'mirror') return { x: MIRROR.x + MIRROR.w / 2, y: MIRROR.y + MIRROR.h + 8, reach: 64 };
       if (it.type === 'shop') return { x: SHOP.frontX, y: SHOP.frontY, reach: 70 };
       if (it.type === 'sofa') return { x: SOFA.frontX, y: SOFA.frontY, reach: 66 };
-      if (it.type === 'backyard') return { x: BACKYARD.frontX, y: BACKYARD.frontY, reach: 70 };
       return { x: it.door.hostPos.x, y: it.door.hostPos.y + 18, reach: 74 };
     },
 
@@ -179,7 +153,6 @@
       const P = CM.palette;
       const close = function () {};
       if (it.type === 'mirror') { CM.hub.openMenu(this); return; }
-      if (it.type === 'backyard') { CM.audio.play('pop'); CM.switchScene('backyard'); return; }
       CM.audio.play('pop');
       if (it.type === 'shop') {
         this.dialog = { host: 'pochacco', line: 'Hi there! Wanna shop or play Coin Hunt?', sel: 0, options: [
@@ -253,7 +226,6 @@
         else if (d.wall === 'bottom') drawBottomDoor(g, d);
         else drawSideDoor(g, d);
       }
-      drawBackyardDoor(g);
 
       // ---- depth-sorted sprites ----
       const sprites = [];
@@ -368,11 +340,6 @@
           D.bubble(g, SOFA.hostX - 84, SOFA.hostY - 118, 168, 46, SOFA.hostX);
           D.text(g, '🚦 Red Light, Green Light!', SOFA.hostX, SOFA.hostY - 101, { size: 13, weight: 800 });
           D.text(g, CM.touchMode ? 'tap ★ to play' : 'press SPACE to play', SOFA.hostX, SOFA.hostY - 83, { size: 12, color: CM.palette.pinkDeep });
-        } else if (near.type === 'backyard') {
-          const r = BACKYARD.door;
-          D.bubble(g, r.x + r.w / 2 - 80, r.y - 110, 160, 44, r.x + r.w / 2);
-          D.text(g, '🌳 Go to the Backyard!', r.x + r.w / 2, r.y - 94, { size: 13, weight: 800 });
-          D.text(g, CM.touchMode ? 'tap ★ to go out' : 'press SPACE to go out', r.x + r.w / 2, r.y - 77, { size: 12, color: CM.palette.mintDeep });
         } else {
           const d = near.door;
           const bx = CM.clamp(d.hostPos.x - 80, 8, CM.W - 168);
